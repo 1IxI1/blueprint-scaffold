@@ -1,6 +1,6 @@
 node_modules/
 dist/
-lib/
+# lib/ # DEVMODE
 yarn-error.log
 yarn.lock
 
