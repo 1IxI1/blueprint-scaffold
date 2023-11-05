@@ -1,3 +1,0 @@
-[submodule "lib/blueprint"]
-	path = lib/blueprint
-	url = https://github.com/ton-org/blueprint

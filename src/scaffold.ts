@@ -1,13 +1,9 @@
-import { buildOne } from '../lib/blueprint/src/cli/build';
-import { Args, Runner } from '../lib/blueprint/src/cli/cli';
-import { DAPP_DIR } from '../lib/blueprint/src/paths';
-import { UIProvider } from '../lib/blueprint/src/ui/UIProvider';
-import { findCompiles } from '../lib/blueprint/src/utils';
-import { TEMPLATES_DIR } from '../lib/blueprint/src/template';
+import { Runner, Args, UIProvider, buildAll } from '@ton/blueprint';
 import arg from 'arg';
 import fs from 'fs/promises';
 import path from 'path';
 import { parseWrappersToJSON } from './parse/wrappersToJSON';
+import { DAPP_DIR } from './paths';
 
 const WRAPPERS_JSON = path.join(DAPP_DIR, 'public', 'wrappers.json');
 const CONFIG_JSON = path.join(DAPP_DIR, 'public', 'config.json');
@@ -20,16 +16,14 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
     ui.write(`Scaffold script running, ${localArgs['--update'] ? 'updating' : 'generating'} dapp...\n\n`);
 
     ui.setActionPrompt('⏳ Compiling contracts...');
-    for (const file of await findCompiles()) {
-        try {
-            await buildOne(file.name);
-        } catch (e) {
-            ui.clearActionPrompt();
-            ui.write((e as any).toString());
-            ui.write(`\n❌ Failed to compile ${file.name}`);
-            ui.write('Please make sure you can run `blueprint build --all` successfully before scaffolding.');
-            process.exit(1);
-        }
+    try {
+        await buildAll(ui);
+    } catch (e) {
+        ui.clearActionPrompt();
+        ui.write((e as any).toString());
+        ui.write(`\n❌ Failed to compile one of the files`);
+        ui.write('Please make sure you can run `blueprint build --all` successfully before scaffolding.');
+        process.exit(1);
     }
     ui.clearActionPrompt();
     ui.write('✅ Compiled.\n');
@@ -48,7 +42,7 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
             ui.write('⚠️ Warning: no dapp found, a new one will be created.\n');
         }
         ui.setActionPrompt('📁 Creating dapp directory...');
-        await fs.cp(path.join(TEMPLATES_DIR, 'dapp'), DAPP_DIR, { recursive: true, force: true });
+        await fs.cp(path.join(__dirname, 'dapp'), DAPP_DIR, { recursive: true, force: true });
         // wrappersConfigTypes.ts is imported in blueprint, to parse wrappers,
         // we remove the compiled files from the destination.
         await fs.rm(path.join(DAPP_DIR, 'src', 'utils', 'wrappersConfigTypes.d.ts'));

@@ -3,8 +3,8 @@ import * as babelParser from '@babel/parser';
 import traverse from '@babel/traverse';
 import generate from '@babel/generator';
 import { Identifier } from '@babel/types';
-import { readCompiled } from '../../lib/blueprint/src/utils';
 import { ParamInfo, Parameters, Functions, WrapperInfo } from '../dapp/src/utils/wrappersConfigTypes';
+import { readCompiled } from '../utils';
 
 export async function parseWrapper(filePath: string, className: string): Promise<WrapperInfo> {
     const content = await fs.readFile(filePath, 'utf-8');
