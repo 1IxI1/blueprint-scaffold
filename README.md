@@ -13,7 +13,7 @@ yarn add blueprint-scaffold
 
 And add to the `blueprint.config.ts`:
 ```ts
-import ScaffoldPlugin from 'blueprint-scaffold';
+import { ScaffoldPlugin } from 'blueprint-scaffold';
 
 export const config = {
   plugins: [

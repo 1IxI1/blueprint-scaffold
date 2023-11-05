@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import { parseWrapper } from './parseWrapper';
-import { findWrappers } from '../../lib/blueprint/src/utils';
-import { UIProvider } from '../../lib/blueprint/src/ui/UIProvider';
+import { UIProvider } from '@ton/blueprint';
 import { WrapperInfo, WrappersData, WrapperConfig, WrappersConfig } from '../dapp/src/utils/wrappersConfigTypes';
+import { findWrappers } from '../utils';
 
 // Custom merge function for objects, for soft updates
 const mergeObjects = (target: any, source: any) => {
