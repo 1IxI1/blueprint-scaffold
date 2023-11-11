@@ -2,7 +2,7 @@
 
 [Try the demo here](https://1ixi1.github.io/blueproject/)
 
-<img width="80%" src="https://github.com/1IxI1/blueprint/assets/53380262/c4545d91-c659-414f-9bcc-8bc5d303aea6"/>
+<img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/2d64be30-a66c-4896-9990-0169ea62fe19"/>
 
 ## Installation
 
@@ -38,7 +38,7 @@ scaffold` creates a dapp properly?
 - [Wrapper requirements](#wrapper-requirements)
   - [sendFunctions](#sendfunctions)
   - [getFunctions](#getfunctions)
-  - [createFromConfig (optional)](#createfromconfig-(optional))
+  - [createFromConfig (optional)](#createfromconfig-optional)
 - [Scaffold it](#scaffold-it)
 - [Configuration](#configuration)
   - [Tab Names](#tab-names)
@@ -50,7 +50,7 @@ scaffold` creates a dapp properly?
   - [Via paths](#via-paths)
   - [Addresses for individual wrappers](#addresses-for-individual-wrappers)
   - [Default values for fields](#default-values-for-fields)
-- [Example config](##example-of-edited-config.json)
+- [Example config](#example-of-edited-configjson)
 
 ## Structure
 
@@ -376,8 +376,7 @@ config.json for our `JettonMinter`:
 ```
 
 ### Without configuration:
-<img width="75%" src="https://github.com/1IxI1/blueprint/assets/53380262/77eb1686-bb5a-4375-b473-1a7a2d7760a2"/>
-
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/376d9c43-9068-498e-bce8-d2d6ab5312da"/>
 
 ##### Default Address
 
@@ -555,5 +554,6 @@ https://1ixi1.github.io/blueproject/?
   }
 }
 ```
-<img width="75%" src="https://github.com/1IxI1/blueprint/assets/53380262/48292622-e901-489e-b090-883fd2e49e21"/>
-<img width="75%" src="https://github.com/1IxI1/blueprint/assets/53380262/659658ae-ae62-4e03-aaf9-103ddce3f947"/>
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/1692a32b-5839-4938-98d4-8a4eaca467ca"/>
+
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/8f7e140a-5be5-45b1-a74b-c425b60f66db"/>
