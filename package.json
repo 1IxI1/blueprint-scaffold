@@ -1,6 +1,6 @@
 {
     "name": "blueprint-scaffold",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Bluerpint Scaffold Plugin. Helps you to build a dapp from wrappers which you've wrote for your FunC contracts.",
     "main": "dist/index.js",
     "author": "TonTech",
