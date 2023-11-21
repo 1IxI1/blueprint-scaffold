@@ -1,11 +1,14 @@
 {
     "name": "blueprint-scaffold",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Bluerpint Scaffold Plugin. Helps you to build a dapp from wrappers which you've wrote for your FunC contracts.",
     "main": "dist/index.js",
-    "author": "TonTech",
+    "author": "1IxI1",
     "license": "MIT",
-    "bin": "./dist/cli/cli.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/1IxI1/blueprint-scaffold.git"
+    },
     "scripts": {
         "build": "rm -rf dist && tsc && cp -r src/dapp dist/",
         "release": "yarn build && yarn publish --access public",
@@ -45,5 +48,8 @@
         "qrcode-terminal": "^0.12.0",
         "ton-x": "^2.1.0",
         "ts-node": "^10.9.1"
-    }
+    },
+    "files": [
+        "dist/**/*"
+    ]
 }
