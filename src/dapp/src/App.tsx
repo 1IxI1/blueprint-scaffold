@@ -5,7 +5,6 @@ import { ConnectButton } from 'src/components/ConnectButton';
 import Footer from 'src/components/Footer';
 import BodyRoot from './BodyRoot';
 import NetworkBadge from './components/NetBadge';
-import Switch from './components/Switch';
 import { getTheme, sendTheme } from './utils/theme';
 import { THEME, useTonConnectUI } from '@tonconnect/ui-react';
 
@@ -72,13 +71,13 @@ function App() {
 							<AppTitle title={process.env.REACT_APP_TITLE || 'Blueprint Dapp'} />
 							<Spacer />
 							<Flex alignItems="center" mt="-6">
-								{!!!pathParams?.method && <Switch setToParent={setIsGetMethods} />}
 								<ConnectButton />
 							</Flex>
 						</Flex>
 						{pathParams && (
 							<BodyRoot
 								areGetMethods={isGetMethods}
+								setIsGetMethods={setIsGetMethods}
 								wrapperFromUrl={pathParams.wrapper}
 								methodFromUrl={pathParams.method}
 								addressFromUrl={pathParams.address}

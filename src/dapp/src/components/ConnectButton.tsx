@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, CopyIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, Button, IconButton, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
@@ -53,7 +53,12 @@ export function ConnectButton() {
 							{shorten(address)}
 						</MenuButton>
 						<MenuList>
-							<MenuItem onClick={() => tonConnectUI.disconnect()}>Disconnect</MenuItem>
+							<MenuItem icon={<MinusIcon />} onClick={() => tonConnectUI.disconnect()}>
+								Disconnect
+							</MenuItem>
+							<MenuItem icon={<CopyIcon />} onClick={() => navigator.clipboard.writeText(address)}>
+								Copy address
+							</MenuItem>
 						</MenuList>
 					</Menu>
 				)}

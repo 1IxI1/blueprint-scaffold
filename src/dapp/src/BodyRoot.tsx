@@ -1,16 +1,38 @@
-import { Box, Button, Center, Fade, Flex, Input, Tab, TabList, Tabs, useDisclosure } from '@chakra-ui/react';
+import {
+	Box,
+	Button,
+	Center,
+	Fade,
+	Flex,
+	HStack,
+	Input,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	Tab,
+	TabList,
+	Tabs,
+	useDisclosure,
+} from '@chakra-ui/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActionCard, ParamsWithValue } from 'src/components/ActionCard';
+import Switch from 'src/components/Switch';
 import { Executor } from 'src/genTxByWrapper';
 import { Address } from '@ton/core';
 import { WrappersConfig, WrappersData } from 'src/utils/wrappersConfigTypes';
+
 import './fade.scss';
 import './tabs.scss';
 import { loadWrappersFromJSON } from './utils/loadWrappers';
 import { useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+
+const noMethod = 'Select method';
 
 interface BodyRootProps {
 	areGetMethods: boolean;
+	setIsGetMethods: React.Dispatch<React.SetStateAction<boolean>>;
 	wrapperFromUrl?: string;
 	methodFromUrl?: string;
 	addressFromUrl?: string;
@@ -24,7 +46,7 @@ function BodyRoot(props: BodyRootProps) {
 	const [addressError, setAddressError] = useState<boolean>(false);
 	const [addrTouched, setAddrTouched] = useState<boolean>(false);
 	const [wrapper, setWrapper] = useState<string>('');
-	const [method, setMethod] = useState<string>('');
+	const [method, setMethod] = useState<string>(noMethod);
 	const [hasDeploy, setHasDeploy] = useState<boolean>(false);
 	const [actionCardKey, setActionCardKey] = useState<string>(''); // to rerender ActionCard
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -35,11 +57,8 @@ function BodyRoot(props: BodyRootProps) {
 	const [urlValidMethod, setUrlValidMethod] = useState<string | null>(null);
 
 	const tabsContainerRef = useRef<HTMLDivElement>(null);
-	const tabsContainerRef2 = useRef<HTMLDivElement>(null);
 	const [showLeftShadow, setShowLeftShadow] = useState(false);
 	const [showRightShadow, setShowRightShadow] = useState(true);
-	const [showLeftShadow2, setShowLeftShadow2] = useState(false);
-	const [showRightShadow2, setShowRightShadow2] = useState(true);
 
 	const [tcUI] = useTonConnectUI();
 	// tcUI's wallet doesn't calls useEffect for some reason
@@ -69,39 +88,12 @@ function BodyRoot(props: BodyRootProps) {
 				setShowRightShadow(false);
 			}
 		}
-
-		// Second tabs container
-		const container2 = tabsContainerRef2.current;
-		if (container2) {
-			const scrollLeft2 = container2.scrollLeft;
-			const scrollWidth2 = container2.scrollWidth;
-			const clientWidth2 = container2.clientWidth;
-
-			if (scrollLeft2 === 0) {
-				setShowLeftShadow2(false);
-				setShowRightShadow2(true);
-			} else if (scrollLeft2 + clientWidth2 === scrollWidth2) {
-				setShowLeftShadow2(true);
-				setShowRightShadow2(false);
-			} else {
-				setShowLeftShadow2(true);
-				setShowRightShadow2(true);
-			}
-
-			if (scrollWidth2 == clientWidth2 && scrollWidth2 > 0) {
-				setShowRightShadow2(false);
-			}
-		}
 	};
 	useEffect(() => {
 		const container1 = tabsContainerRef.current;
 		if (container1) container1.addEventListener('scroll', handleScroll);
-		const container2 = tabsContainerRef2.current;
-		if (container2) container2.addEventListener('scroll', handleScroll);
-
 		return () => {
 			if (container1) container1.removeEventListener('scroll', handleScroll);
-			if (container2) container2.removeEventListener('scroll', handleScroll);
 		};
 	}, []);
 
@@ -129,8 +121,9 @@ function BodyRoot(props: BodyRootProps) {
 	}, [wrappers]);
 
 	const preloadWrappers = useCallback(async () => {
-		// cache it to refetch on switching from get to send or versa.
-		// because some wrappers may not have get or send methods.
+		// caching wrappers raw file to reload it on switching
+		// from get to send or versa.
+		// because some we remove some wrappers with no send/get methods.
 		const [parsedWrappers, parsedConfig] = await loadWrappersFromJSON();
 		return { parsedWrappers, parsedConfig };
 	}, []);
@@ -139,35 +132,42 @@ function BodyRoot(props: BodyRootProps) {
 		async function loadWrappers() {
 			const { parsedWrappers, parsedConfig } = await preloadWrappers();
 			var _wrappers = parsedWrappers;
-			// filter wrappers with selected methods
+
+			// remove wrappers with no send/get methods
 			for (const _wrapper in parsedWrappers) {
 				if (Object.keys(parsedWrappers[_wrapper][methods()]).length === 0) {
 					delete _wrappers[_wrapper];
 				}
 			}
+
 			setWrappers(_wrappers);
 			setWrappersConfig(parsedConfig);
 
 			const [wrapperFromUrl, methodFromUrl] = checkUrlParams(_wrappers);
 			const wrapperName =
 				wrapperFromUrl || (Object.keys(_wrappers).includes(wrapper) ? wrapper : Object.keys(_wrappers)[0]);
+
 			// sendDeploy should not be shown in sends, and it cannot present in get methods.
 			const _hasDeploy = 'sendDeploy' in parsedWrappers[wrapperName][methods()];
 			setHasDeploy(_hasDeploy);
-			const _methods = Object.keys(_wrappers[wrapperName][methods()]);
-			const methodName = methodFromUrl || _methods[_hasDeploy ? 1 : 0];
 
-			// if mode has changed then correctly update tabs
+			const _methods = Object.keys(_wrappers[wrapperName][methods()]);
+			// const methodName = methodFromUrl || _methods[_hasDeploy ? 1 : 0];
+			const methodName = methodFromUrl || noMethod;
+
+			// if method change (compare to prev state) then correctly update tabs
 			if (method.slice(0, 2) !== methodName.slice(0, 2) && method !== '') {
 				let wrapperTab = Object.keys(_wrappers).indexOf(wrapper);
 				if (wrapperTab === -1) wrapperTab = 0;
 				setWrapperTabIndex(wrapperTab);
-				setMethodTabIndex(0);
+				// yeah, its may be -1 - that means no method and "Select method" in selector
+				setMethodTabIndex(_methods.indexOf(methodName));
 			}
 
 			setWrapper(wrapperName);
 			setMethod(methodName);
 		}
+
 		loadWrappers();
 		onOpen();
 		handleScroll();
@@ -213,6 +213,8 @@ function BodyRoot(props: BodyRootProps) {
 	}, [destAddr]);
 
 	const buildAndExecute = async (isGet: boolean, methodName: string, params: ParamsWithValue) => {
+		// builds parameters for running a method and executes it, with giving the result
+
 		if (!wrappers) throw new Error('Wrappers are empty, not loaded?');
 		if (!executor) throw new Error('No executor');
 		// should not happen ^^
@@ -272,7 +274,13 @@ function BodyRoot(props: BodyRootProps) {
 								_after={leftShadowStyle(showLeftShadow)}
 								_before={rightShadowStyle(showRightShadow)}
 							>
-								<Tabs variant="solid-rounded" index={wrapperTabIndex} onChange={(n) => setWrapperTabIndex(n)}>
+								<Tabs
+									colorScheme={props.areGetMethods ? 'green' : 'blue'}
+									color="blue"
+									variant="solid-rounded"
+									index={wrapperTabIndex}
+									onChange={(n) => setWrapperTabIndex(n)}
+								>
 									<TabList
 										className="tabs-container"
 										ref={tabsContainerRef}
@@ -300,11 +308,11 @@ function BodyRoot(props: BodyRootProps) {
 															const _hasDeploy = 'sendDeploy' in wrappers[wrapperName][methods()];
 															setHasDeploy(_hasDeploy);
 															const methodName = Object.keys(wrappers[wrapperName][methods()])[_hasDeploy ? 1 : 0];
-															setMethod(methodName);
+															setMethod(noMethod);
 															setDestAddr('');
 															setAddrTouched(false);
 															setActionCardKey(methodName);
-															setMethodTabIndex(0);
+															setMethodTabIndex(-1);
 															setTimeout(() => onOpen(), 150);
 														}}
 													>
@@ -318,97 +326,100 @@ function BodyRoot(props: BodyRootProps) {
 						</Box>
 					</Center>
 				)}
+				{!configAddress && (
+					<Center>
+						<Flex align="center" maxWidth={['85%', '60%', '38%', '38%']} mb="4" mt="2" alignItems="center">
+							<Input
+								ref={inputRef}
+								isInvalid={destAddr ? addressError : addrTouched}
+								mr={hasDeploy ? '2' : '0'}
+								bg="white"
+								placeholder="Contract Address"
+								rounded="100"
+								size="md"
+								value={destAddr}
+								onChange={(e) => setDestAddr(e.target.value)}
+								onClick={() => setAddrTouched(true)}
+							></Input>
+							{hasDeploy && (
+								<>
+									or
+									<Button
+										ml="2"
+										size="sm"
+										px="6"
+										onClick={() => {
+											onClose();
+											setMethod('sendDeploy');
+											setActionCardKey('sendDeploy');
+											setConfigAddress(Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c'));
+											setTimeout(() => onOpen(), 100);
+										}}
+									>
+										Deploy new
+									</Button>
+								</>
+							)}
+						</Flex>
+					</Center>
+				)}
+
 				{urlValidMethod === null && (
 					<Center>
-						<Box maxW={['95%', '82%', '70%', '70%']} mx="auto" mt="1" mb="10" overflow="hidden">
-							<Box
-								overflowX="auto"
-								overflowY="hidden"
-								whiteSpace="nowrap"
-								position="relative"
-								className="tabs-wrapper"
-								_after={leftShadowStyle(showLeftShadow2)}
-								_before={rightShadowStyle(showRightShadow2)}
-							>
-								<Tabs variant="solid-rounded" index={methodTabIndex} onChange={(n) => setMethodTabIndex(n)}>
-									<TabList
-										className="tabs-container"
-										ref={tabsContainerRef2}
-										position="relative"
-										display="flex"
-										flexWrap="nowrap"
-										height="50px"
-										alignItems="center"
-									>
-										{wrappers &&
-											wrappersConfig &&
-											wrappers[wrapper] &&
-											wrappers[wrapper][methods()] &&
-											Object.keys(wrappers[wrapper][methods()]).map((methodName) => {
-												if (methodName === 'sendDeploy') return null;
-												const tabName = tabNameFromConfig(methodName) || methodName;
-												return (
-													<Tab
-														sx={tabTextStyle}
-														key={methodName}
-														onClick={() => {
-															onClose();
-															setMethod(methodName);
-															setActionCardKey(methodName);
-															setTimeout(() => onOpen(), 100);
-														}}
-													>
-														{tabName}
-													</Tab>
-												);
-											})}
-									</TabList>
-								</Tabs>
-							</Box>
-						</Box>
+						<HStack mt="1" mb="5">
+							<Switch setToParent={props.setIsGetMethods} />
+							<Menu>
+								<MenuButton
+									as={Button}
+									transition="all 0.2s"
+									borderWidth="1px"
+									colorScheme="gray"
+									backgroundColor="transparent"
+									minHeight="10"
+									minWidth="250"
+									rounded="xl"
+									whiteSpace="nowrap"
+									px="2"
+									// align="center"
+									textAlign="left"
+									alignItems="center"
+									rightIcon={<ChevronDownIcon />}
+								>
+									{tabNameFromConfig(method) || method}
+								</MenuButton>
+								<MenuList>
+									{wrappers &&
+										wrappersConfig &&
+										wrappers[wrapper] &&
+										wrappers[wrapper][methods()] &&
+										Object.keys(wrappers[wrapper][methods()]).map((methodName) => {
+											if (methodName === 'sendDeploy') return null;
+											const tabName = tabNameFromConfig(methodName) || methodName;
+											return (
+												<MenuItem
+													sx={tabTextStyle}
+													key={methodName}
+													onClick={() => {
+														onClose();
+														setMethod(methodName);
+														setActionCardKey(methodName);
+														setTimeout(() => onOpen(), 100);
+													}}
+												>
+													{tabName}
+												</MenuItem>
+											);
+										})}
+								</MenuList>
+							</Menu>
+						</HStack>
 					</Center>
 				)}
 				{wrappers && wrappersConfig && method in wrappers[wrapper][methods()] && (
 					<Fade in={isOpen} unmountOnExit>
 						<Box>
-							{!configAddress && (
-								<Center>
-									<Flex align="center" maxWidth={['85%', '60%', '38%', '38%']} mb="4" mt="-5" alignItems="center">
-										<Input
-											ref={inputRef}
-											isInvalid={destAddr ? addressError : addrTouched}
-											mr={hasDeploy ? '2' : '0'}
-											bg="white"
-											placeholder="Contract Address"
-											rounded="100"
-											size="md"
-											value={destAddr}
-											onChange={(e) => setDestAddr(e.target.value)}
-											onClick={() => setAddrTouched(true)}
-										></Input>
-										{hasDeploy && (
-											<>
-												or
-												<Button
-													ml="2"
-													size="sm"
-													px="6"
-													onClick={() => {
-														onClose();
-														setMethod('sendDeploy');
-														setActionCardKey('sendDeploy');
-														setConfigAddress(Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c'));
-														setTimeout(() => onOpen(), 100);
-													}}
-												>
-													Deploy
-												</Button>
-											</>
-										)}
-									</Flex>
-								</Center>
-							)}
 							<ActionCard
+								visible={actionCardKey !== noMethod}
 								key={actionCardKey}
 								methodName={method}
 								isGet={props.areGetMethods}

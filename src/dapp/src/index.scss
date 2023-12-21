@@ -12,3 +12,15 @@ body {
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+@font-face {
+	font-family: 'Inter';
+	src: local('Inter'), url('./fonts/Inter/Inter-Medium.ttf') format('truetype');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Inter Bold';
+	src: local('Inter'), url('./fonts/Inter/Inter-Bold.ttf') format('truetype');
+	font-weight: bold;
+}
