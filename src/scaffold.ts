@@ -1,8 +1,11 @@
 import { Runner, Args, UIProvider, buildAll } from '@ton/blueprint';
 import arg from 'arg';
+import { execSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
+import { findImportsOfList } from './parse/findImports';
 import { parseWrappersToJSON } from './parse/wrappersToJSON';
+import { platform } from 'os';
 import { DAPP_DIR } from './paths';
 
 const WRAPPERS_JSON = path.join(DAPP_DIR, 'public', 'wrappers.json');
@@ -70,16 +73,28 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
     ui.clearActionPrompt();
     ui.write('✅ Updated dapp configs.\n');
 
-    ui.setActionPrompt('📁 Moving wrappers into dapp...');
+    ui.setActionPrompt('📁 Copying wrappers into dapp...');
     await fs.mkdir(path.join(DAPP_DIR, 'src', 'wrappers'), { recursive: true });
-    for (const file of wrappersFiles) {
-        await fs.cp(file, path.join(DAPP_DIR, 'src', 'wrappers', path.basename(file)), {
-            recursive: true,
+
+    const filesToCopy = await findImportsOfList(wrappersFiles, process.cwd());
+    for (const filePath of filesToCopy) {
+        const relativePath = path.relative(process.cwd(), filePath);
+        await fs.cp(filePath, path.join(DAPP_DIR, 'src', relativePath), {
             force: true,
         });
     }
+
     ui.clearActionPrompt();
-    ui.write('✅ Moved wrappers into dapp.\n');
+    ui.write('✅ Copied wrappers into dapp.\n');
+
+    ui.setActionPrompt('🧹 Running prettier...');
+    // prettier is not essential for running the dapp
+    // therefore, ignore warnings/errors when running prettier
+    const isWindows = platform() === 'win32';
+    const suppressWarningsCmd = isWindows ? '2> NUL' : '2> /dev/null';
+    execSync(`npx prettier --write . ${suppressWarningsCmd}`, { cwd: DAPP_DIR });
+    ui.clearActionPrompt();
+    ui.write('✅ Ran prettier.\n');
 
     ui.write('✅ Scaffold complete!\n');
 
