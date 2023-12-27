@@ -16,11 +16,11 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActionCard, ParamsWithValue } from 'src/components/ActionCard';
-import Switch from 'src/components/Switch';
-import { Executor } from 'src/genTxByWrapper';
+import { ActionCard, ParamsWithValue } from './components/ActionCard';
+import Switch from './components/Switch';
+import { Executor } from './genTxByWrapper';
 import { Address } from '@ton/core';
-import { WrappersConfig, WrappersData } from 'src/utils/wrappersConfigTypes';
+import { WrappersConfig, WrappersData } from './utils/wrappersConfigTypes';
 
 import './fade.scss';
 import './tabs.scss';

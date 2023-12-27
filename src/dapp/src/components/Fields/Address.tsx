@@ -46,7 +46,7 @@ export function AddressField(props: FieldProps) {
 			{!(props.overridden && (defaultAddress || props.optional)) && (
 				<Flex alignItems="center" justifyContent={'left'} gap="2">
 					<Box display="flex" alignItems="end">
-						<Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
+						<Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end" textAlign="center">
 							{props.fieldName || props.paramName}
 							{defaultAddress ? ' (optional)' : ''}:
 						</Text>

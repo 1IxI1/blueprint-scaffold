@@ -7,10 +7,10 @@ import { Parameters } from './utils/wrappersConfigTypes';
 import { TonConnectUI } from '@tonconnect/ui-react';
 
 class TonConnectSender implements Sender {
-	#provider: ITonConnect;
+	#provider: TonConnectUI;
 	readonly address?: Address;
 
-	constructor(provider: ITonConnect) {
+	constructor(provider: TonConnectUI) {
 		this.#provider = provider;
 		if (provider.wallet) this.address = Address.parse(provider.wallet?.account.address);
 		else this.address = undefined;
@@ -50,7 +50,7 @@ export class Executor {
 		let via: TonConnectSender | undefined;
 		let network: 'mainnet' | 'testnet' = 'mainnet'; // if no wallet, will be mainnet
 		if (tcUI.wallet) {
-			via = new TonConnectSender(tcUI.connector);
+			via = new TonConnectSender(tcUI);
 			network = tcUI.wallet.account.chain === CHAIN.MAINNET ? 'mainnet' : 'testnet';
 		} else console.warn('No wallet connected, only the get methods');
 

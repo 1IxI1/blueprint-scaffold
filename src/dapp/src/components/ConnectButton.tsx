@@ -34,7 +34,7 @@ export function ConnectButton() {
 		<>
 			<Box className="auth-button" style={{ zIndex: 2 }}>
 				{address === '' ? (
-					<Button leftIcon=<ConnectIcon /> {...buttonProps}>
+                    <Button leftIcon={<ConnectIcon />} {...buttonProps}>
 						Connect Wallet
 					</Button>
 				) : isSmallScreen ? (
