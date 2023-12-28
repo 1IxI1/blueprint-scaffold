@@ -11,4 +11,4 @@ rm -r src/dapp/src/wrappers/*
 rm src/dapp/public/config.json
 rm src/dapp/public/wrappers.json
 
-sed -i '' '2s/.*/REACT_APP_TITLE='\''My Contract'\''/' src/dapp/.env
+sed -i '' '2s/.*/VITE_REACT_APP_TITLE='\''My Contract'\''/' src/dapp/.env

@@ -87,15 +87,6 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
     ui.clearActionPrompt();
     ui.write('✅ Copied wrappers into dapp.\n');
 
-    ui.setActionPrompt('🧹 Running prettier...');
-    // prettier is not essential for running the dapp
-    // therefore, ignore warnings/errors when running prettier
-    const isWindows = platform() === 'win32';
-    const suppressWarningsCmd = isWindows ? '2> NUL' : '2> /dev/null';
-    execSync(`npx prettier --write . ${suppressWarningsCmd}`, { cwd: DAPP_DIR });
-    ui.clearActionPrompt();
-    ui.write('✅ Ran prettier.\n');
-
     ui.write('✅ Scaffold complete!\n');
 
     ui.write('\nTo start the dapp, run (will take a few minutes):\n');
