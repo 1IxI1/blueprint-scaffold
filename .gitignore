@@ -2,6 +2,7 @@ node_modules/
 dist/
 # lib/ # DEVMODE
 yarn-error.log
+vim.session
 
 # yarn
 .yarn/*

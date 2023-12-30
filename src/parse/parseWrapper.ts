@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
 import * as babelParser from '@babel/parser';
-import traverse from '@babel/traverse';
+import traverse, { NodePath } from '@babel/traverse';
 import generate from '@babel/generator';
 
-import { Identifier } from '@babel/types';
-import { ParamInfo, Parameters, Functions, WrapperInfo } from '../dapp/src/utils/wrappersConfigTypes';
+import { Node, Identifier, TSInterfaceDeclaration, TSTypeAliasDeclaration, TSTypeAnnotation } from '@babel/types';
+import { ParamInfo, Parameters, Functions, WrapperInfo, ParamInfoNested } from '../dapp/src/utils/wrappersConfigTypes';
 import { readCompiled } from '../utils';
 
 export async function parseWrapper(filePath: string, className: string): Promise<WrapperInfo> {
@@ -23,6 +23,93 @@ export async function parseWrapper(filePath: string, className: string): Promise
     let canBeCreatedFromConfig = false;
     let canBeCreatedFromAddress = false;
     let configType: Parameters | undefined = undefined;
+
+    function isTypeDefinedInFile(typeName: string, ast: any): boolean {
+        let isDefined = false;
+        traverse(ast, {
+            TSTypeAliasDeclaration(path) {
+                if (path.node.id.name === typeName) {
+                    isDefined = true;
+                }
+            },
+            TSInterfaceDeclaration(path) {
+                if (path.node.id.name === typeName) {
+                    isDefined = true;
+                }
+            },
+        });
+        return isDefined;
+    }
+
+    function parseTypeObject(typeName: string, ast: any): Parameters {
+        // parse interface/type alias for object like
+        // type MyDeepType = {
+        //     c: bigint;
+        //     v: Address
+        // }
+        // by its name.
+        let _params: Parameters = {};
+
+        // intenal function for 2 cases - alias and interface types
+        function _handleObjectType(path: NodePath<TSTypeAliasDeclaration | TSInterfaceDeclaration>) {
+            // SAME NAME
+            if (path.node.id.name === typeName) {
+                path.traverse({
+                    // FOR EACH FIELD
+                    TSPropertySignature(propertyPath) {
+                        const ta = propertyPath.node.typeAnnotation;
+                        if (propertyPath.node.key.type == 'Identifier' && ta?.type == 'TSTypeAnnotation') {
+                            const optional = !!propertyPath.node.optional;
+
+                            // no default value in interfaces and aliases
+
+                            const field = propertyPath.node.key.name;
+                            _params[field] = handleType(ta, ast, optional);
+                        }
+                    },
+                });
+            }
+        }
+        traverse(ast, {
+            TSTypeAliasDeclaration(path) {
+                _handleObjectType(path);
+            },
+            TSInterfaceDeclaration(path) {
+                _handleObjectType(path);
+            },
+        });
+
+        return _params;
+    }
+
+    function handleType(
+        annotation: TSTypeAnnotation,
+        ast: Node,
+        optional?: boolean,
+        defaultValue?: string
+    ): ParamInfo | ParamInfoNested {
+        const ta = annotation.typeAnnotation;
+        // IF ITS A REFERENCE - SET NESTED AND CONTINUE RECURSIVELY
+        if (ta.type == 'TSTypeReference' && ta.typeName.type == 'Identifier') {
+            if (isTypeDefinedInFile(ta.typeName.name, ast)) {
+                return {
+                    type: 'nested',
+                    isNested: true,
+                    fields: parseTypeObject(ta.typeName.name, ast),
+                    optional,
+                    defaultValue,
+                };
+            }
+        }
+        // IF SIMPLE - SET SIMPLE
+        return {
+            type: generate(ta).code,
+            isNested: false,
+            optional,
+            defaultValue,
+        };
+    }
+
     traverse(ast, {
         ExportNamedDeclaration(path) {
             // parsing config type
@@ -45,30 +132,32 @@ export async function parseWrapper(filePath: string, className: string): Promise
                 node.declaration?.typeAnnotation?.type === 'TSTypeLiteral'
             ) {
                 configType = {};
-                const { members } = node.declaration.typeAnnotation;
-                for (const member of members) {
-                    if (member.type === 'TSPropertySignature' && member.key.type === 'Identifier') {
-                        const { name } = member.key;
-                        const { typeAnnotation } = member;
-                        if (typeAnnotation?.type === 'TSTypeAnnotation') {
-                            if (typeAnnotation.typeAnnotation.type === 'TSTypeReference') {
-                                const { typeName } = typeAnnotation.typeAnnotation;
-                                if (typeName.type === 'Identifier') {
-                                    configType[name] = { type: typeName.name, optional: member.optional };
-                                }
-                            } else {
-                                configType[name] = {
-                                    type: generate(typeAnnotation.typeAnnotation).code,
-                                    optional: member.optional,
-                                };
-                            }
-                        }
-                    }
-                }
+                // const { members } = node.declaration.typeAnnotation;
+                configType = parseTypeObject(node.declaration?.id.name, ast);
+                // for (const member of members) {
+                //     if (member.type === 'TSPropertySignature' && member.key.type === 'Identifier') {
+                //         const { name } = member.key;
+                //         const { typeAnnotation } = member;
+                //         if (typeAnnotation?.type === 'TSTypeAnnotation') {
+                //             if (typeAnnotation.typeAnnotation.type === 'TSTypeReference') {
+                //                 const { typeName } = typeAnnotation.typeAnnotation;
+                //                 if (typeName.type === 'Identifier') {
+                //                     configType[name] = handleType(typeAnnotation, ast, !!member.optional);
+                //                 }
+                //             } else {
+                //                 configType[name] = {
+                //                     isNested: false,
+                //                     type: generate(typeAnnotation.typeAnnotation).code,
+                //                     optional: member.optional,
+                //                 };
+                //             }
+                //         }
+                //     }
+                // }
             }
         },
         Class(path) {
-            // parsing main wrapper class
+            // parsing main wrapper class.
             // taking send and get functions +
             // createFromConfig, createFromAddress existences
             const { node } = path;
@@ -95,22 +184,24 @@ export async function parseWrapper(filePath: string, className: string): Promise
                         ) {
                             const isGet = node.key.name.startsWith('get');
                             let methodParams: Parameters = {};
-                            path.node.params.forEach((param) => {
-                                let p: Identifier = {} as Identifier;
-                                let defaultValue: string | undefined;
-                                if (param.type === 'Identifier') {
-                                    p = param;
-                                } else if (param.type === 'AssignmentPattern' && param.left.type === 'Identifier') {
-                                    p = param.left;
-                                    defaultValue = generate(param.right).code;
-                                }
-                                const { name, data } = paramData(p, defaultValue);
 
-                                // remove provider param in all methods,
-                                // and via in send methods
-                                if (name === 'provider') {
-                                } else if (!isGet && name === 'via') {
-                                } else methodParams[name] = data;
+                            path.node.params.forEach((param) => {
+                                let defaultValue: string | undefined;
+
+                                // check for defaulValue
+                                if (param.type === 'AssignmentPattern' && param.left.type === 'Identifier') {
+                                    defaultValue = generate(param.right).code;
+                                    param = param.left;
+                                }
+                                if (param.type !== 'Identifier' || param.typeAnnotation?.type !== 'TSTypeAnnotation')
+                                    throw new Error('Unexpected param type');
+
+                                const name = param.name;
+
+                                // remove provider param in all methods, and via in send methods
+                                if (name === 'provider' || (isGet && name === 'via')) return;
+
+                                methodParams[name] = handleType(param.typeAnnotation, ast, !!param.optional);
                             });
                             if (isGet) getFunctions[node.key.name] = methodParams;
                             else sendFunctions[node.key.name] = methodParams;
@@ -152,17 +243,6 @@ export async function parseWrapper(filePath: string, className: string): Promise
             canBeCreatedFromConfig,
             configType,
             codeHex,
-        },
-    };
-}
-
-function paramData(param: Identifier, defaultValue?: string): { name: string; data: ParamInfo } {
-    return {
-        name: param.name,
-        data: {
-            type: param.typeAnnotation ? generate(param.typeAnnotation).code.slice(2) : 'any',
-            optional: param.optional,
-            defaultValue,
         },
     };
 }
