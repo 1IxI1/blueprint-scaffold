@@ -1,11 +1,9 @@
 import { Runner, Args, UIProvider, buildAll } from '@ton/blueprint';
 import arg from 'arg';
-import { execSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import { findImportsOfList } from './parse/findImports';
 import { parseWrappersToJSON } from './parse/wrappersToJSON';
-import { platform } from 'os';
 import { DAPP_DIR } from './paths';
 
 const WRAPPERS_JSON = path.join(DAPP_DIR, 'public', 'wrappers.json');
