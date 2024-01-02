@@ -5,17 +5,27 @@ type ParamInfoBase = {
 };
 
 export interface ParamInfo extends ParamInfoBase {
-    isNested: false;
+    isNested?: false;
+    isUnion?: false;
+}
+
+export interface ParamInfoUnion extends ParamInfoBase {
+    type: 'union';
+    isUnion: true;
+    isNested?: false;
+    types: Array<string | Parameters>;
 }
 
 export interface ParamInfoNested extends ParamInfoBase {
-    type: "nested";
+    type: 'nested';
     isNested: true;
+    isUnion?: false;
     fields: Parameters;
 }
 
-// may go recursively for nested parameters
-export type Parameters = Record<string, ParamInfo | ParamInfoNested>;
+// may go recursively for nested/splitted parameters
+export type Parameters = Record<string, ParamInfo | ParamInfoNested | ParamInfoUnion>;
+
 // example:
 // "params": {
 //     "amount": { "type": "bigint", "defaultValue": "toNano('0.1')" },
