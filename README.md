@@ -1,6 +1,12 @@
-# Dapp from wrappers - `blueprint scaffold`
+# 🫐 Blueprint Scaffold
 
-[Try the demo here](https://1ixi1.github.io/blueproject/)
+The first plugin for the [Blueprint Framework](https://github.com/ton-org/blueprint/) - a developer enviroment for [TON blockchain](https://ton.org/).
+
+Turns a blueprint project into a full-fledged DApp.
+
+A normal blueprint project contains wrappers for each [FunC contract](https://learnxinyminutes.com/docs/func/). Scaffold parses these wrappers and turns them into a React application for using contract methods through the UI.
+
+[Try demo here](https://1ixi1.github.io/blueproject/)
 
 <img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/2d64be30-a66c-4896-9990-0169ea62fe19"/>
 
@@ -33,7 +39,6 @@ yarn blueprint scaffold
 How should the project be organized to ensure that the `blueprint
 scaffold` creates a dapp properly?
 
-- [Structure](#structure)
 - [Project name](#project-name)
 - [Wrapper requirements](#wrapper-requirements)
   - [sendFunctions](#sendfunctions)
@@ -52,41 +57,6 @@ scaffold` creates a dapp properly?
   - [Default values for fields](#default-values-for-fields)
 - [Example config](#example-of-edited-configjson)
 
-## Structure
-
-First, wrappers in your project must lie strictly in the `wrappers/`
-directory and imports in them **cannot go to the root** of the project or
-higher.
-
-❌ Not like this:
-
-```
-contracts/
- └── my-contract.fc
-SendModes.ts <╗                    // will not be included in dapp
-Errors.ts <═══╬═══════════════╗    // will not be included in dapp
-Ops.ts <══════╝               ║    // will not be included in dapp
-wrappers/                     ║
- ├── MyContract.compile.ts    ║
- └── MyContract.ts ═══════════╣
-tests/                        ║
- └── MyContract.spec.ts ══════╝
-```
-
-✅ But like this:
-
-```
-contracts/
- └── my-contract.fc
-wrappers/
- ├── SendModes.ts <╗
- ├── Errors.ts <═══╬══════════╗
- ├── Ops.ts <══════╝          ║
- ├── MyContract.compile.ts    ║
- └── MyContract.ts ═══════════╣
-tests/                        ║
- └── MyContract.spec.ts ══════╝
-```
 
 ## Project name
 
