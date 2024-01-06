@@ -1,8 +1,8 @@
 // special because it's a checkbox
 
-import { Box, Checkbox, Flex, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { FieldProps } from '../../ActionCard';
+import { Box, Checkbox, Flex, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { FieldProps } from "../../ActionCard";
 
 export function BoolField(props: FieldProps) {
   const [value, setValue] = useState<boolean>(false);
@@ -12,7 +12,7 @@ export function BoolField(props: FieldProps) {
       try {
         setValue(Boolean(props.defaultValue));
       } catch (e) {
-        console.warn('Failed to parse default bool', e);
+        console.warn("Failed to parse default bool", e);
       }
     }
   }, []);
@@ -24,7 +24,7 @@ export function BoolField(props: FieldProps) {
   return (
     <>
       {!props.overridden && (
-        <Flex alignItems="center" justifyContent={'left'} gap="2">
+        <Flex alignItems="center" justifyContent={"left"} gap="2">
           <Box display="flex" alignItems="end">
             <Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
               {props.fieldName || props.paramName}:

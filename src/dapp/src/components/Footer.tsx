@@ -1,5 +1,5 @@
-import { Badge, Box, Center, Flex, Text } from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
+import { Badge, Box, Center, Flex, Text } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
 
 function TONIcon() {
   return (

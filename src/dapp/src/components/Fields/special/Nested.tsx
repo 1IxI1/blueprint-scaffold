@@ -1,7 +1,7 @@
-import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { FieldProps, Fields, ParamsWithValue, ParamValue } from '../../ActionCard';
-import { Parameters } from 'src/utils/wrappersConfigTypes';
+import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { FieldProps, Fields, ParamsWithValue, ParamValue } from "../../ActionCard";
+import { Parameters } from "src/utils/wrappersConfigTypes";
 
 export type NestedFieldProps = FieldProps & { fields: Fields; propsType: Parameters };
 
@@ -34,11 +34,11 @@ export function NestedField(props: NestedFieldProps) {
       {!(props.overridden && props.optional) && (
         <>
           <Box borderWidth="1px" rounded="8" px="3" my="3" py="1" bg="#FCFDFF">
-            <Flex alignItems="center" justifyContent={'left'} gap="2">
+            <Flex alignItems="center" justifyContent={"left"} gap="2">
               <Box display="flex" alignItems="end">
                 <Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
                   {props.fieldName || props.paramName}
-                  {props.hideOptional ? '' : props.optional ? ' (optional):' : ':'}
+                  {props.hideOptional ? "" : props.optional ? " (optional):" : ":"}
                 </Text>
               </Box>
 

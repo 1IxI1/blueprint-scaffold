@@ -1,4 +1,4 @@
-const separator = window.location.pathname.replace(/\/+$/, '') + ':';
+const separator = window.location.pathname.replace(/\/+$/, "") + ":";
 
 const setItem = localStorage.setItem;
 localStorage.constructor.prototype.setItem = (key: unknown, value: string) =>

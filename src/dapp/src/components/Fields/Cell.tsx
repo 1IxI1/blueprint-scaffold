@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Cell } from '@ton/core';
-import { FieldProps } from '../ActionCard';
-import { BaseField } from './Field';
+import React, { useEffect, useState } from "react";
+import { Cell } from "@ton/core";
+import { FieldProps } from "../ActionCard";
+import { BaseField } from "./Field";
 
 export function CellField(props: FieldProps) {
   function parseInputValue(value: string): { result: any; correct: boolean } {
     try {
-      const parsedCell = Cell.fromBoc(Buffer.from(value, 'hex'))[0];
+      const parsedCell = Cell.fromBoc(Buffer.from(value, "hex"))[0];
       return { result: parsedCell, correct: true };
     } catch {
       try {
@@ -18,6 +18,6 @@ export function CellField(props: FieldProps) {
     }
   }
   return (
-    <BaseField {...props} type={'Cell'} parseInputValue={parseInputValue} placeHolder="HEX or base64 serialized cell" />
+    <BaseField {...props} type={"Cell"} parseInputValue={parseInputValue} placeHolder="HEX or base64 serialized cell" />
   );
 }

@@ -1,10 +1,10 @@
-import { CHAIN, ITonConnect } from '@tonconnect/sdk';
-import { TonClient4 } from '@ton/ton';
-import { getHttpV4Endpoint } from '@orbs-network/ton-access';
-import { Address, beginCell, Cell, Sender, SenderArguments, SendMode, storeStateInit } from '@ton/core';
-import { ParamsWithValue } from './components/ActionCard';
-import { Parameters } from './utils/wrappersConfigTypes';
-import { TonConnectUI } from '@tonconnect/ui-react';
+import { CHAIN, ITonConnect } from "@tonconnect/sdk";
+import { TonClient4 } from "@ton/ton";
+import { getHttpV4Endpoint } from "@orbs-network/ton-access";
+import { Address, beginCell, Cell, Sender, SenderArguments, SendMode, storeStateInit } from "@ton/core";
+import { ParamsWithValue } from "./components/ActionCard";
+import { Parameters } from "./utils/wrappersConfigTypes";
+import { TonConnectUI } from "@tonconnect/ui-react";
 
 class TonConnectSender implements Sender {
   #provider: TonConnectUI;
@@ -18,7 +18,7 @@ class TonConnectSender implements Sender {
 
   async send(args: SenderArguments): Promise<void> {
     if (!(args.sendMode === undefined || args.sendMode == SendMode.PAY_GAS_SEPARATELY)) {
-      throw new Error('Deployer sender does not support `sendMode` other than `PAY_GAS_SEPARATELY`');
+      throw new Error("Deployer sender does not support `sendMode` other than `PAY_GAS_SEPARATELY`");
     }
 
     await this.#provider.sendTransaction({
@@ -27,9 +27,9 @@ class TonConnectSender implements Sender {
         {
           address: args.to.toString(),
           amount: args.value.toString(),
-          payload: args.body?.toBoc().toString('base64'),
+          payload: args.body?.toBoc().toString("base64"),
           stateInit: args.init
-            ? beginCell().storeWritable(storeStateInit(args.init)).endCell().toBoc().toString('base64')
+            ? beginCell().storeWritable(storeStateInit(args.init)).endCell().toBoc().toString("base64")
             : undefined,
         },
       ],
@@ -48,11 +48,11 @@ export class Executor {
 
   static async createFromUI(tcUI: TonConnectUI) {
     let via: TonConnectSender | undefined;
-    let network: 'mainnet' | 'testnet' = 'mainnet'; // if no wallet, will be mainnet
+    let network: "mainnet" | "testnet" = "mainnet"; // if no wallet, will be mainnet
     if (tcUI.wallet) {
       via = new TonConnectSender(tcUI);
-      network = tcUI.wallet.account.chain === CHAIN.MAINNET ? 'mainnet' : 'testnet';
-    } else console.warn('No wallet connected, only the get methods');
+      network = tcUI.wallet.account.chain === CHAIN.MAINNET ? "mainnet" : "testnet";
+    } else console.warn("No wallet connected, only the get methods");
 
     const tc = new TonClient4({
       endpoint: await getHttpV4Endpoint({ network }),
@@ -67,8 +67,8 @@ export class Executor {
     methodName: string,
     params: ParamsWithValue,
   ) {
-    if (!this.#via) throw new Error('No sender connected!');
-    wrapperPath = wrapperPath.replace('.ts', '');
+    if (!this.#via) throw new Error("No sender connected!");
+    wrapperPath = wrapperPath.replace(".ts", "");
     const Wrapper = (await import(`${wrapperPath}.ts`))[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
     const args = Object.values(params).map((param) => param.value);
@@ -82,7 +82,7 @@ export class Executor {
     methodName: string,
     params: ParamsWithValue,
   ) {
-    wrapperPath = wrapperPath.replace('.ts', '');
+    wrapperPath = wrapperPath.replace(".ts", "");
     const Wrapper = (await import(`${wrapperPath}.ts`))[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
     const args = Object.values(params).map((param) => param.value);
@@ -97,8 +97,8 @@ export class Executor {
     configType: Parameters,
     codeHex: string,
   ): Promise<Address> {
-    if (!this.#via) throw new Error('No sender connected!');
-    wrapperPath = wrapperPath.replace('.ts', '');
+    if (!this.#via) throw new Error("No sender connected!");
+    wrapperPath = wrapperPath.replace(".ts", "");
     const Wrapper = (await import(`${wrapperPath}.ts`))[className];
 
     const contractConfig: { [key: string]: any } = {};
@@ -106,7 +106,7 @@ export class Executor {
       contractConfig[configField] = params[configField].value;
       delete params[configField];
     }
-    const codeCell = Cell.fromBoc(Buffer.from(codeHex, 'hex'))[0];
+    const codeCell = Cell.fromBoc(Buffer.from(codeHex, "hex"))[0];
     const w = Wrapper.createFromConfig(contractConfig, codeCell);
     const contractProvider = this.#client.open(w);
     const args = Object.values(params).map((param) => param.value);

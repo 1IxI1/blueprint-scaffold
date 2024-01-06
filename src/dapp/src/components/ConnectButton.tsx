@@ -1,7 +1,7 @@
-import { ChevronDownIcon, CopyIcon, MinusIcon } from '@chakra-ui/icons';
-import { Box, Button, IconButton, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from '@chakra-ui/react';
-import React, { useCallback } from 'react';
-import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
+import { ChevronDownIcon, CopyIcon, MinusIcon } from "@chakra-ui/icons";
+import { Box, Button, IconButton, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from "@chakra-ui/react";
+import React, { useCallback } from "react";
+import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 
 export function ConnectIcon() {
   return (
@@ -14,7 +14,7 @@ export function ConnectIcon() {
   );
 }
 export function ConnectButton() {
-  const [isSmallScreen] = useMediaQuery('(max-width: 30em)');
+  const [isSmallScreen] = useMediaQuery("(max-width: 30em)");
   const [tonConnectUI] = useTonConnectUI();
   const address = useTonAddress();
 
@@ -24,16 +24,16 @@ export function ConnectButton() {
 
   const buttonProps = {
     onClick: handleButtonClick,
-    colorScheme: 'blue',
-    rounded: '13',
-    height: '40px',
-    mr: ['2', '0', '0', '0'],
+    colorScheme: "blue",
+    rounded: "13",
+    height: "40px",
+    mr: ["2", "0", "0", "0"],
   };
 
   return (
     <>
       <Box className="auth-button" style={{ zIndex: 2 }}>
-        {address === '' ? (
+        {address === "" ? (
           <Button leftIcon={<ConnectIcon />} {...buttonProps}>
             Connect Wallet
           </Button>
@@ -46,7 +46,7 @@ export function ConnectButton() {
               rounded="13"
               height="40px"
               rightIcon={<ChevronDownIcon />}
-              mr={['2', '0', '0', '0']}
+              mr={["2", "0", "0", "0"]}
               bg="gray.300"
               colorScheme="gray"
             >
@@ -68,5 +68,5 @@ export function ConnectButton() {
 }
 
 function shorten(address: string) {
-  return address.slice(0, 4) + '...' + address.slice(-3);
+  return address.slice(0, 4) + "..." + address.slice(-3);
 }

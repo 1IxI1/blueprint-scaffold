@@ -1,7 +1,7 @@
-import { Box, Button, Flex, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Address, Cell, Dictionary, beginCell, toNano } from '@ton/core';
-import { FieldProps, ParamValue } from '../ActionCard';
+import { Box, Button, Flex, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Address, Cell, Dictionary, beginCell, toNano } from "@ton/core";
+import { FieldProps, ParamValue } from "../ActionCard";
 
 export interface BaseFieldProps {
   paramName: string;
@@ -19,7 +19,7 @@ export interface BaseFieldProps {
 }
 
 export function BaseField(props: BaseFieldProps) {
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<string>("");
   const [touched, setTouched] = useState<boolean>(false);
   const [parseError, setParseError] = useState<boolean>(false);
 
@@ -38,15 +38,15 @@ export function BaseField(props: BaseFieldProps) {
 
       if (!props.isArray) {
         if (props.types.includes(typeof parsedDefault)) defaultValue = parsedDefault;
-        else throw new Error('defaultValue doesnt correspond its type');
+        else throw new Error("defaultValue doesnt correspond its type");
       } else {
         // if we should be parsing array
         if (Array.isArray(parsedDefault) && parsedDefault.every((it) => props.types.includes(typeof it)))
           defaultValue = parsedDefault;
-        else throw new Error('defaultValue doesnt correspond its type');
+        else throw new Error("defaultValue doesnt correspond its type");
       }
     } catch (e) {
-      console.warn('Failed to parse defaultValue', e);
+      console.warn("Failed to parse defaultValue", e);
     }
   }
 
@@ -60,11 +60,11 @@ export function BaseField(props: BaseFieldProps) {
           setParseError(!parseResult.correct);
           props.sendParam(props.paramName, parseResult.result, parseResult.correct);
         } else {
-          const elements = value.split(',');
+          const elements = value.split(",");
           let result: any[] = [];
           elements.forEach((element) => {
             const parseResult = props.parseInputValue(element);
-            if (!parseResult.correct) throw new Error('some element parsing failed');
+            if (!parseResult.correct) throw new Error("some element parsing failed");
             result.push(parseResult.result);
           });
           setParseError(false);
@@ -91,11 +91,11 @@ export function BaseField(props: BaseFieldProps) {
   return (
     <>
       {!(props.overridden && (defaultValue || props.optional)) && (
-        <Flex alignItems="center" justifyContent={'left'} gap="2">
+        <Flex alignItems="center" justifyContent={"left"} gap="2">
           <Box display="flex" alignItems="end">
             <Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
               {props.fieldName || props.paramName}
-              {props.hideOptional ? '' : defaultValue || props.optional ? ' (optional):' : ':'}
+              {props.hideOptional ? "" : defaultValue || props.optional ? " (optional):" : ":"}
             </Text>
           </Box>
           <Input

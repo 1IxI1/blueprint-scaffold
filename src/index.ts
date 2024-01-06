@@ -1,11 +1,11 @@
-import { Plugin, PluginRunner } from '@ton/blueprint';
-import { scaffold } from './scaffold';
+import { Plugin, PluginRunner } from "@ton/blueprint";
+import { scaffold } from "./scaffold";
 
 export class ScaffoldPlugin implements Plugin {
   runners(): PluginRunner[] {
     return [
       {
-        name: 'scaffold',
+        name: "scaffold",
         runner: scaffold,
         help: `Usage: blueprint scaffold [flags]
 

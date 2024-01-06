@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Address } from '@ton/core';
-import { FieldProps } from '../ActionCard';
-import { BaseField } from './Field';
+import React, { useEffect, useState } from "react";
+import { Address } from "@ton/core";
+import { FieldProps } from "../ActionCard";
+import { BaseField } from "./Field";
 
 export function AddressField(props: FieldProps) {
   function parseInputValue(value: string): { result: any; correct: boolean } {
@@ -16,10 +16,10 @@ export function AddressField(props: FieldProps) {
   return (
     <BaseField
       {...props}
-      types={['Address']}
+      types={["Address"]}
       parseInputValue={parseInputValue}
       placeHolder="UQAbc444"
-      arrayPlaceHolder={'UQAb1,UQBc2...'}
+      arrayPlaceHolder={"UQAb1,UQBc2..."}
     />
   );
 }

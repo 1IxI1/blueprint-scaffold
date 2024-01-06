@@ -14,21 +14,21 @@ import {
   TabList,
   Tabs,
   useDisclosure,
-} from '@chakra-ui/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActionCard, ParamsWithValue } from './components/ActionCard';
-import Switch from './components/Switch';
-import { Executor } from './genTxByWrapper';
-import { Address } from '@ton/core';
-import { WrappersConfig, WrappersData } from './utils/wrappersConfigTypes';
+} from "@chakra-ui/react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ActionCard, ParamsWithValue } from "./components/ActionCard";
+import Switch from "./components/Switch";
+import { Executor } from "./genTxByWrapper";
+import { Address } from "@ton/core";
+import { WrappersConfig, WrappersData } from "./utils/wrappersConfigTypes";
 
-import './fade.scss';
-import './tabs.scss';
-import { loadWrappersFromJSON } from './utils/loadWrappers';
-import { useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import "./fade.scss";
+import "./tabs.scss";
+import { loadWrappersFromJSON } from "./utils/loadWrappers";
+import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
-const noMethod = 'Select method';
+const noMethod = "Select method";
 
 interface BodyRootProps {
   areGetMethods: boolean;
@@ -41,14 +41,14 @@ interface BodyRootProps {
 function BodyRoot(props: BodyRootProps) {
   const [wrappers, setWrappers] = useState<WrappersData | null>(null);
   const [wrappersConfig, setWrappersConfig] = useState<WrappersConfig | null>(null);
-  const [destAddr, setDestAddr] = useState<string>('');
+  const [destAddr, setDestAddr] = useState<string>("");
   const [configAddress, setConfigAddress] = useState<Address | null>(null);
   const [addressError, setAddressError] = useState<boolean>(false);
   const [addrTouched, setAddrTouched] = useState<boolean>(false);
-  const [wrapper, setWrapper] = useState<string>('');
+  const [wrapper, setWrapper] = useState<string>("");
   const [method, setMethod] = useState<string>(noMethod);
   const [hasDeploy, setHasDeploy] = useState<boolean>(false);
-  const [actionCardKey, setActionCardKey] = useState<string>(''); // to rerender ActionCard
+  const [actionCardKey, setActionCardKey] = useState<string>(""); // to rerender ActionCard
   const inputRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [wrapperTabIndex, setWrapperTabIndex] = useState<number>(0);
@@ -91,9 +91,9 @@ function BodyRoot(props: BodyRootProps) {
   };
   useEffect(() => {
     const container1 = tabsContainerRef.current;
-    if (container1) container1.addEventListener('scroll', handleScroll);
+    if (container1) container1.addEventListener("scroll", handleScroll);
     return () => {
-      if (container1) container1.removeEventListener('scroll', handleScroll);
+      if (container1) container1.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -148,7 +148,7 @@ function BodyRoot(props: BodyRootProps) {
         wrapperFromUrl || (Object.keys(_wrappers).includes(wrapper) ? wrapper : Object.keys(_wrappers)[0]);
 
       // sendDeploy should not be shown in sends, and it cannot present in get methods.
-      const _hasDeploy = 'sendDeploy' in parsedWrappers[wrapperName][methods()];
+      const _hasDeploy = "sendDeploy" in parsedWrappers[wrapperName][methods()];
       setHasDeploy(_hasDeploy);
 
       const _methods = Object.keys(_wrappers[wrapperName][methods()]);
@@ -156,7 +156,7 @@ function BodyRoot(props: BodyRootProps) {
       const methodName = methodFromUrl || noMethod;
 
       // if method change (compare to prev state) then correctly update tabs
-      if (method.slice(0, 2) !== methodName.slice(0, 2) && method !== '') {
+      if (method.slice(0, 2) !== methodName.slice(0, 2) && method !== "") {
         let wrapperTab = Object.keys(_wrappers).indexOf(wrapper);
         if (wrapperTab === -1) wrapperTab = 0;
         setWrapperTabIndex(wrapperTab);
@@ -179,16 +179,16 @@ function BodyRoot(props: BodyRootProps) {
     // set provided with WrapperName=EQaddr
     if (wrappers && wrappersConfig) {
       try {
-        setConfigAddress(Address.parse(wrappersConfig[wrapper]['defaultAddress']));
+        setConfigAddress(Address.parse(wrappersConfig[wrapper]["defaultAddress"]));
       } catch {
         const url = new URL(window.location.href);
         const searchParams = url.searchParams;
         const providedAddress = searchParams.get(wrapper);
         try {
-          setConfigAddress(Address.parse(props.addressFromUrl || ''));
+          setConfigAddress(Address.parse(props.addressFromUrl || ""));
         } catch {
           try {
-            setConfigAddress(Address.parse(providedAddress || ''));
+            setConfigAddress(Address.parse(providedAddress || ""));
           } catch {
             setConfigAddress(null);
           }
@@ -215,31 +215,31 @@ function BodyRoot(props: BodyRootProps) {
   const buildAndExecute = async (isGet: boolean, methodName: string, params: ParamsWithValue) => {
     // builds parameters for running a method and executes it, with giving the result
 
-    if (!wrappers) throw new Error('Wrappers are empty, not loaded?');
-    if (!executor) throw new Error('No executor');
+    if (!wrappers) throw new Error("Wrappers are empty, not loaded?");
+    if (!executor) throw new Error("No executor");
     // should not happen ^^
 
     if ((addressError || !destAddr) && !configAddress) {
-      console.warn('no address, highlighting input');
+      console.warn("no address, highlighting input");
       setAddrTouched(true);
       inputRef.current?.focus();
       return;
     }
-    if (methodName === 'sendDeploy') {
-      const deployData = wrappers[wrapper]['deploy'];
-      if (deployData['codeHex'] && deployData['configType']) {
+    if (methodName === "sendDeploy") {
+      const deployData = wrappers[wrapper]["deploy"];
+      if (deployData["codeHex"] && deployData["configType"]) {
         return await executor.deploy(
-          wrappers[wrapper]['path'],
+          wrappers[wrapper]["path"],
           wrapper,
           params,
-          deployData['configType'],
-          deployData['codeHex'],
+          deployData["configType"],
+          deployData["codeHex"],
         );
-      } else throw new Error('Deploy data is missing');
+      } else throw new Error("Deploy data is missing");
     }
     const executeParams = [
       configAddress || Address.parse(destAddr),
-      wrappers[wrapper]['path'],
+      wrappers[wrapper]["path"],
       wrapper,
       methodName,
       params,
@@ -253,18 +253,18 @@ function BodyRoot(props: BodyRootProps) {
 
   const tabNameFromConfig = (methodName: string) => {
     if (wrappersConfig && wrapper in wrappersConfig && methodName in wrappersConfig[wrapper][methods()])
-      return wrappersConfig[wrapper][methods()][methodName]['tabName'];
-    else return '';
+      return wrappersConfig[wrapper][methods()][methodName]["tabName"];
+    else return "";
   };
 
-  const methods = () => (props.areGetMethods ? 'getFunctions' : 'sendFunctions');
+  const methods = () => (props.areGetMethods ? "getFunctions" : "sendFunctions");
 
   return (
     <>
       <Box bg="#F7F9FB">
         {urlValidWrapper === null && (
           <Center>
-            <Box maxW={['95%', '82%', '70%', '70%']} mx="auto" mt={['2', '-2', '-2', '-2']} overflow="hidden">
+            <Box maxW={["95%", "82%", "70%", "70%"]} mx="auto" mt={["2", "-2", "-2", "-2"]} overflow="hidden">
               <Box
                 overflowX="auto"
                 overflowY="hidden"
@@ -275,7 +275,7 @@ function BodyRoot(props: BodyRootProps) {
                 _before={rightShadowStyle(showRightShadow)}
               >
                 <Tabs
-                  colorScheme={props.areGetMethods ? 'green' : 'blue'}
+                  colorScheme={props.areGetMethods ? "green" : "blue"}
                   color="blue"
                   variant="solid-rounded"
                   index={wrapperTabIndex}
@@ -295,7 +295,7 @@ function BodyRoot(props: BodyRootProps) {
                       Object.keys(wrappers).map((wrapperName) => {
                         const tabName =
                           wrapperName in wrappersConfig
-                            ? wrappersConfig[wrapperName]['tabName'] || wrapperName
+                            ? wrappersConfig[wrapperName]["tabName"] || wrapperName
                             : wrapperName;
                         return (
                           <Tab
@@ -304,12 +304,12 @@ function BodyRoot(props: BodyRootProps) {
                             onClick={() => {
                               onClose();
                               setWrapper(wrapperName);
-                              console.log('set wrapper in OnClick:', wrapperName);
-                              const _hasDeploy = 'sendDeploy' in wrappers[wrapperName][methods()];
+                              console.log("set wrapper in OnClick:", wrapperName);
+                              const _hasDeploy = "sendDeploy" in wrappers[wrapperName][methods()];
                               setHasDeploy(_hasDeploy);
                               const methodName = Object.keys(wrappers[wrapperName][methods()])[_hasDeploy ? 1 : 0];
                               setMethod(noMethod);
-                              setDestAddr('');
+                              setDestAddr("");
                               setAddrTouched(false);
                               setActionCardKey(methodName);
                               setMethodTabIndex(-1);
@@ -328,11 +328,11 @@ function BodyRoot(props: BodyRootProps) {
         )}
         {!configAddress && (
           <Center>
-            <Flex align="center" maxWidth={['85%', '60%', '38%', '38%']} mb="4" mt="2" alignItems="center">
+            <Flex align="center" maxWidth={["85%", "60%", "38%", "38%"]} mb="4" mt="2" alignItems="center">
               <Input
                 ref={inputRef}
                 isInvalid={destAddr ? addressError : addrTouched}
-                mr={hasDeploy ? '2' : '0'}
+                mr={hasDeploy ? "2" : "0"}
                 bg="white"
                 placeholder="Contract Address"
                 rounded="100"
@@ -350,9 +350,9 @@ function BodyRoot(props: BodyRootProps) {
                     px="6"
                     onClick={() => {
                       onClose();
-                      setMethod('sendDeploy');
-                      setActionCardKey('sendDeploy');
-                      setConfigAddress(Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c'));
+                      setMethod("sendDeploy");
+                      setActionCardKey("sendDeploy");
+                      setConfigAddress(Address.parse("EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"));
                       setTimeout(() => onOpen(), 100);
                     }}
                   >
@@ -393,7 +393,7 @@ function BodyRoot(props: BodyRootProps) {
                     wrappers[wrapper] &&
                     wrappers[wrapper][methods()] &&
                     Object.keys(wrappers[wrapper][methods()]).map((methodName) => {
-                      if (methodName === 'sendDeploy') return null;
+                      if (methodName === "sendDeploy") return null;
                       const tabName = tabNameFromConfig(methodName) || methodName;
                       return (
                         <MenuItem
@@ -426,7 +426,7 @@ function BodyRoot(props: BodyRootProps) {
                 isGet={props.areGetMethods}
                 methodParams={wrappers[wrapper][methods()][method]}
                 buildAndExecute={buildAndExecute}
-                deploy={wrappers[wrapper]['deploy']}
+                deploy={wrappers[wrapper]["deploy"]}
                 methodConfig={wrappersConfig[wrapper][methods()][method]}
                 definedTypes={wrappers[wrapper].definedTypes}
               />
@@ -439,37 +439,37 @@ function BodyRoot(props: BodyRootProps) {
 }
 
 const tabTextStyle = {
-  fontFamily: 'Inter',
-  fontWeight: '500',
-  fontSize: '14px',
+  fontFamily: "Inter",
+  fontWeight: "500",
+  fontSize: "14px",
 };
 
 const shadowStyle = {
   content: '""',
-  position: 'absolute',
-  top: '0',
-  bottom: '0',
-  width: '40px',
-  pointerEvents: 'none',
-  transition: 'opacity 0.3s, left 0.3s',
-  zIndex: '1',
+  position: "absolute",
+  top: "0",
+  bottom: "0",
+  width: "40px",
+  pointerEvents: "none",
+  transition: "opacity 0.3s, left 0.3s",
+  zIndex: "1",
 };
 
 const rightShadowStyle = (showRightShadow: boolean) => {
   return {
     ...shadowStyle,
-    right: '0',
-    opacity: showRightShadow ? '1' : '0',
-    background: 'linear-gradient(to right, transparent, #f7f9fb)',
+    right: "0",
+    opacity: showRightShadow ? "1" : "0",
+    background: "linear-gradient(to right, transparent, #f7f9fb)",
   };
 };
 
 const leftShadowStyle = (showLeftShadow: boolean) => {
   return {
     ...shadowStyle,
-    left: '0',
-    opacity: showLeftShadow ? '1' : '0',
-    background: 'linear-gradient(to left, transparent, #f7f9fb)',
+    left: "0",
+    opacity: showLeftShadow ? "1" : "0",
+    background: "linear-gradient(to left, transparent, #f7f9fb)",
   };
 };
 

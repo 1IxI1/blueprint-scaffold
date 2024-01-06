@@ -1,15 +1,15 @@
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { parse } from '@babel/parser';
-import traverse, { NodePath } from '@babel/traverse';
-import { ImportDeclaration } from '@babel/types';
+import * as fs from "fs/promises";
+import * as path from "path";
+import { parse } from "@babel/parser";
+import traverse, { NodePath } from "@babel/traverse";
+import { ImportDeclaration } from "@babel/types";
 
 // can't do it async because of babel + traverse
 const parseFile = async (filePath: string) => {
-  const content = await fs.readFile(filePath, 'utf-8');
+  const content = await fs.readFile(filePath, "utf-8");
   return parse(content, {
-    sourceType: 'module',
-    plugins: ['typescript'],
+    sourceType: "module",
+    plugins: ["typescript"],
   });
 };
 
@@ -39,7 +39,7 @@ const processFile = async (filePath: string, baseDir: string, visited: Set<strin
 
   // try to check if files exist and go deeper in recursion
   for (let importPath of importPaths) {
-    const resolvedPath = importPath + '.ts';
+    const resolvedPath = importPath + ".ts";
     try {
       await fs.access(resolvedPath);
       const newFiles = await processFile(resolvedPath, baseDir, visited);

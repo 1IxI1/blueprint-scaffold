@@ -1,15 +1,15 @@
-import fs from 'fs/promises';
-import { parseWrapper } from './parseWrapper';
-import { UIProvider } from '@ton/blueprint';
-import { WrapperInfo, WrappersData, WrapperConfig, WrappersConfig } from '../dapp/src/utils/wrappersConfigTypes';
-import { findWrappers } from '../utils';
+import fs from "fs/promises";
+import { parseWrapper } from "./parseWrapper";
+import { UIProvider } from "@ton/blueprint";
+import { WrapperInfo, WrappersData, WrapperConfig, WrappersConfig } from "../dapp/src/utils/wrappersConfigTypes";
+import { findWrappers } from "../utils";
 
 // Custom merge function for objects, for soft updates
 const mergeObjects = (target: any, source: any) => {
   const mergedObj = { ...target };
   for (const key in source) {
     if (source.hasOwnProperty(key)) {
-      if (mergedObj[key] && typeof mergedObj[key] === 'object' && typeof source[key] === 'object') {
+      if (mergedObj[key] && typeof mergedObj[key] === "object" && typeof source[key] === "object") {
         mergedObj[key] = mergeObjects(mergedObj[key], source[key]);
       } else if (mergedObj[key] === undefined) {
         mergedObj[key] = source[key];
@@ -49,7 +49,7 @@ async function writeUpdateConfig(configPath: string, newConfig: WrappersConfig) 
   let config: WrappersConfig = {}; // empty by default
   try {
     // Load the current config.json file
-    const configFile = await fs.readFile(configPath, 'utf-8');
+    const configFile = await fs.readFile(configPath, "utf-8");
     config = JSON.parse(configFile);
   } catch (e) {}
 
@@ -86,15 +86,15 @@ async function parseFromFiles(ui: UIProvider, files: File[]) {
       wrapper = await parseWrapper(path, name);
     } catch (e) {
       if (e instanceof Error) {
-        ui.write('⚠️ Omitting `' + name + '`: ' + e.message);
+        ui.write("⚠️ Omitting `" + name + "`: " + e.message);
       }
       continue;
     }
     wrappers[name] = wrapper;
 
     config[name] = {
-      defaultAddress: '',
-      tabName: '',
+      defaultAddress: "",
+      tabName: "",
       sendFunctions: {},
       getFunctions: {},
       definedTypes: {},
@@ -102,12 +102,12 @@ async function parseFromFiles(ui: UIProvider, files: File[]) {
     // Fill sendFunctions and getFunctions config with '' to all params
     for (const sendMethod of Object.keys(wrapper.sendFunctions)) {
       config[name].sendFunctions[sendMethod] = {
-        tabName: '',
+        tabName: "",
         params: {},
       };
       for (const [paramName, paramData] of Object.entries(wrapper.sendFunctions[sendMethod])) {
         config[name].sendFunctions[sendMethod].params[paramName] = {
-          fieldTitle: '',
+          fieldTitle: "",
           // Add to config an option to hide input if default value is present
           overrideWithDefault: paramData.defaultValue || paramData.optional ? false : undefined,
         };
@@ -115,25 +115,25 @@ async function parseFromFiles(ui: UIProvider, files: File[]) {
     }
     for (const getMethod of Object.keys(wrapper.getFunctions)) {
       config[name].getFunctions[getMethod] = {
-        tabName: '',
+        tabName: "",
         params: {},
         outNames: [],
       };
       for (const [paramName, paramData] of Object.entries(wrapper.getFunctions[getMethod])) {
         config[name].getFunctions[getMethod].params[paramName] = {
-          fieldTitle: '',
+          fieldTitle: "",
           overrideWithDefault: paramData.defaultValue || paramData.optional ? false : undefined,
         };
       }
     }
     for (const type of Object.keys(wrapper.definedTypes)) {
       config[name].definedTypes[type] = {
-        shownName: '',
+        shownName: "",
         properties: {},
       };
       for (const [paramName, paramData] of Object.entries(wrapper.definedTypes[type])) {
         config[name].definedTypes[type].properties[paramName] = {
-          fieldTitle: '',
+          fieldTitle: "",
           overrideWithDefault: paramData.defaultValue || paramData.optional ? false : undefined,
         };
       }
@@ -142,7 +142,7 @@ async function parseFromFiles(ui: UIProvider, files: File[]) {
   return { wrappers, config, paths: files.map((f) => f.path) };
 }
 
-export async function parseWrappersToJSON(ui: UIProvider, wrappersOut = 'wrappers.json', configOut = 'config.json') {
+export async function parseWrappersToJSON(ui: UIProvider, wrappersOut = "wrappers.json", configOut = "config.json") {
   const files = await findWrappers();
   const { wrappers, config, paths } = await parseFromFiles(ui, files);
 
