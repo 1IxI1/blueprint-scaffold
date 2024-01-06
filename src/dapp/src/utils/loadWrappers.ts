@@ -1,15 +1,7 @@
-import { WrappersConfig, WrappersData } from "./wrappersConfigTypes";
+import { WrappersConfig, WrappersData } from './wrappersConfigTypes';
 
-export const loadWrappersFromJSON = async (): Promise<
-  [WrappersData, WrappersConfig]
-> => {
-  const responseWrappers = await fetch(
-    `${import.meta.env.VITE_PUBLIC_URL}/wrappers.json`,
-  );
-  const responseConfig = await fetch(
-    `${import.meta.env.VITE_PUBLIC_URL}/config.json`,
-  );
-  const jsonWrappers = await responseWrappers.json();
-  const jsonConfig = await responseConfig.json();
-  return [jsonWrappers, jsonConfig];
+export const loadWrappersFromJSON = async (): Promise<[WrappersData, WrappersConfig]> => {
+  const wrappers = await import('../config/wrappers.json');
+  const config = await import('../config/config.json');
+  return [wrappers.default, config.default];
 };

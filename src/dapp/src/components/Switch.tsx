@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { IconButton, Tooltip } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 export function BackForthIcon({ isRotated }: { isRotated: boolean }) {
   return (
@@ -10,8 +10,8 @@ export function BackForthIcon({ isRotated }: { isRotated: boolean }) {
       fill="none"
       id="up-down-arrow"
       style={{
-        transform: `rotate(${isRotated ? "180deg" : "0deg"})`,
-        transition: "transform 0.3s ease",
+        transform: `rotate(${isRotated ? '180deg' : '0deg'})`,
+        transition: 'transform 0.3s ease',
       }}
     >
       <path
@@ -22,15 +22,11 @@ export function BackForthIcon({ isRotated }: { isRotated: boolean }) {
   );
 }
 
-export default function Switch({
-  setToParent,
-}: {
-  setToParent: (isGetMethods: boolean) => void;
-}) {
+export default function Switch({ setToParent }: { setToParent: (isGetMethods: boolean) => void }) {
   const [isGet, setIsGet] = useState(false);
 
   return (
-    <Tooltip label={isGet ? "Switch to send methods" : "Switch to get methods"}>
+    <Tooltip label={isGet ? 'Switch to send methods' : 'Switch to get methods'}>
       <IconButton
         variant="outline"
         // colorScheme={isGet ? 'green' : 'blue'}

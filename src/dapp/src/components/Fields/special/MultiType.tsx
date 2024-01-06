@@ -1,11 +1,11 @@
-import { Box, Flex, Select, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { choseField, FieldProps } from "../ActionCard";
+import { Box, Flex, Select, Text } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { choseField, FieldProps } from '../../ActionCard';
 
-type MultiTypeFieldProps = FieldProps & { types: string[] };
+export type MultiTypeFieldProps = FieldProps & { types: string[] };
 
 export function MultiTypeField(props: MultiTypeFieldProps) {
-  const [selectedType, setSelectedType] = useState<string>("");
+  const [selectedType, setSelectedType] = useState<string>('');
   const [Field, setReplacingField] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
@@ -27,22 +27,14 @@ export function MultiTypeField(props: MultiTypeFieldProps) {
           {Field ? (
             Field
           ) : (
-            <Flex alignItems="center" justifyContent={"left"} gap="2">
+            <Flex alignItems="center" justifyContent={'left'} gap="2">
               <Box display="flex" alignItems="end">
-                <Text
-                  marginTop="4"
-                  size="md"
-                  fontWeight="semibold"
-                  alignSelf="end"
-                >
+                <Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
                   {props.fieldName || props.paramName}
-                  {props.optional ? " (optional)" : ""}:
+                  {props.hideOptional ? '' : props.optional ? ' (optional):' : ':'}
                 </Text>
               </Box>
-              <Select
-                placeholder="Select type"
-                onChange={(e) => setSelectedType(e.target.value)}
-              >
+              <Select placeholder="Select type" onChange={(e) => setSelectedType(e.target.value)}>
                 {props.types.map((type: string) => (
                   <option key={type} value={type}>
                     {type}

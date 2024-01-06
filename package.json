@@ -15,10 +15,10 @@
         "format": "prettier --write src"
     },
     "devDependencies": {
-        "@ton/blueprint": "^0.13.0",
+        "@ton/blueprint": "^0.15.0",
         "@ton/core": "^0.53.0",
         "@ton/crypto": "^3.2.0",
-        "@ton/ton": "^13.5.1",
+        "@ton/ton": "^13.9.0",
         "@types/babel__generator": "^7.6.8",
         "@types/babel__traverse": "^7.20.4",
         "@types/node": "^20.2.5",

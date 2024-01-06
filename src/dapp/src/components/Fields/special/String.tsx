@@ -1,25 +1,20 @@
-import { RepeatIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { FieldProps } from "../ActionCard";
+// special because it has revert button
+// and no check logic needed for string
+
+import { RepeatIcon } from '@chakra-ui/icons';
+import { Box, Flex, IconButton, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { FieldProps } from '../../ActionCard';
 
 export function StringField(props: FieldProps) {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>('');
   const [touched, setTouched] = useState<boolean>(false);
   let defaultString: string | null = null;
   if (props.defaultValue) {
     try {
       defaultString = eval(`() => { return ${props.defaultValue}; }`)();
     } catch (e) {
-      console.warn("Failed to parse default string", e);
+      console.warn('Failed to parse default string', e);
     }
   }
 
@@ -29,8 +24,7 @@ export function StringField(props: FieldProps) {
       if (props.optional) {
         props.sendParam(props.paramName, undefined, true);
       } else {
-        if (defaultString)
-          props.sendParam(props.paramName, defaultString, true);
+        if (defaultString) props.sendParam(props.paramName, defaultString, true);
         else props.sendParam(props.paramName, text, true);
       }
     } else {
@@ -40,20 +34,20 @@ export function StringField(props: FieldProps) {
   }, [text]);
 
   const placeHolder = () => {
-    if (touched) return "type here";
+    if (touched) return 'type here';
     if (defaultString) return defaultString;
     if (props.optional) return "don't touch for undefined";
-    return "type here";
+    return 'type here';
   };
 
   return (
     <>
       {!(props.overridden && (defaultString || props.optional)) && (
-        <Flex alignItems="center" justifyContent={"left"} gap="2">
+        <Flex alignItems="center" justifyContent={'left'} gap="2">
           <Box display="flex" alignItems="end">
             <Text marginTop="4" size="md" fontWeight="semibold" alignSelf="end">
               {props.fieldName || props.paramName}
-              {defaultString || props.optional ? " (optional)" : ""}:
+              {props.hideOptional ? '' : defaultString || props.optional ? ' (optional):' : ':'}
             </Text>
           </Box>
           <InputGroup>
@@ -74,7 +68,7 @@ export function StringField(props: FieldProps) {
                   icon={<RepeatIcon />}
                   variant="ghost"
                   onClick={() => {
-                    setText("");
+                    setText('');
                     setTouched(false);
                   }}
                 />
