@@ -6,9 +6,10 @@ Turns a blueprint project into a full-fledged DApp.
 
 A normal blueprint project contains wrappers for each [FunC contract](https://learnxinyminutes.com/docs/func/). Scaffold parses these wrappers and turns them into a React application for using contract methods through the UI.
 
+<img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/1da658bf-872c-4f1f-85d1-3cc6a5dc5fd1"/>
+
 [Try demo here](https://1ixi1.github.io/blueproject/)
 
-<img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/2d64be30-a66c-4896-9990-0169ea62fe19"/>
 
 ## Installation
 
@@ -287,9 +288,9 @@ yarn blueprint scaffold --update
 
 Scaffold generates 2 json files for your project that can (or should) be
 customized:
-[dapp/public/wrappers.json](https://github.com/1IxI1/blueproject/blob/main/dapp/public/wrappers.json)
+[dapp/src/config/wrappers.json](https://github.com/1IxI1/blueproject/blob/main/dapp/src/config/wrappers.json)
 and
-[dapp/public/config.json](https://github.com/1IxI1/blueproject/blob/main/dapp/public/config.json).
+[dapp/src/config/config.json](https://github.com/1IxI1/blueproject/blob/main/dapp/src/config/config.json).
 In the first one, you can simply delete some methods or wrappers and
 optionally set default values (be careful with this).
 
@@ -346,7 +347,8 @@ config.json for our `JettonMinter`:
 ```
 
 ### Without configuration:
-<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/376d9c43-9068-498e-bce8-d2d6ab5312da"/>
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/a45cb37c-74db-4894-88bf-b682c6dbbddd"/>
+
 
 ##### Default Address
 
@@ -524,6 +526,7 @@ https://1ixi1.github.io/blueproject/?
   }
 }
 ```
-<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/1692a32b-5839-4938-98d4-8a4eaca467ca"/>
 
-<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/8f7e140a-5be5-45b1-a74b-c425b60f66db"/>
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/f185b08c-79d2-4c62-8bc8-7370977292f3"/>
+
+<img width="75%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/a2411518-0409-4bce-accb-852c94abfdfa"/>
