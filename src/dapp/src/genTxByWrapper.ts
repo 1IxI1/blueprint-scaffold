@@ -69,7 +69,12 @@ export class Executor {
   ) {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");
-    const Wrapper = (await import(`${wrapperPath}.ts`))[className];
+    const Wrapper = (
+      await import(
+        /* @vite-ignore */
+        `${wrapperPath}.ts`
+      )
+    )[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
     const args = Object.values(params).map((param) => param.value);
     return await contractProvider[methodName](this.#via, ...args);
@@ -83,7 +88,12 @@ export class Executor {
     params: ParamsWithValue
   ) {
     wrapperPath = wrapperPath.replace(".ts", "");
-    const Wrapper = (await import(`${wrapperPath}.ts`))[className];
+    const Wrapper = (
+      await import(
+        /* @vite-ignore */
+        `${wrapperPath}.ts`
+      )
+    )[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
     const args = Object.values(params).map((param) => param.value);
 
@@ -99,7 +109,12 @@ export class Executor {
   ): Promise<Address> {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");
-    const Wrapper = (await import(`${wrapperPath}.ts`))[className];
+    const Wrapper = (
+      await import(
+        /* @vite-ignore */
+        `${wrapperPath}.ts`
+      )
+    )[className];
 
     const contractConfig: { [key: string]: any } = {};
     for (const configField in configType) {

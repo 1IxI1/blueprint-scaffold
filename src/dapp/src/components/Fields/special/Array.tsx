@@ -35,7 +35,6 @@ export function ArrayField(props: ArrayFieldProps) {
     let newCorrects = corrects;
     if (value) {
       if (newCorrects.indexOf(from) === -1) newCorrects.push(from);
-      console.log(props.fieldName, "new correct", from, value);
     } else newCorrects = corrects.filter((param) => param !== from);
     setCorrects(newCorrects);
   };

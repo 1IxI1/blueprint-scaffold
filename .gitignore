@@ -11,4 +11,4 @@ vim.session
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-
+install-state.gz

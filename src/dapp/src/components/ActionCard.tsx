@@ -40,12 +40,9 @@ import {
 } from "./Fields";
 import { CHAIN } from "@tonconnect/sdk";
 import { useTonWallet } from "@tonconnect/ui-react";
-import { NestedField, NestedFieldProps } from "./Fields/special/Nested";
-import { MultiTypeFieldProps } from "./Fields/special/MultiType";
-import { ArrayField, ArrayFieldProps } from "./Fields/special/Array";
+import { NestedField } from "./Fields/special/Nested";
+import { ArrayField } from "./Fields/special/Array";
 
-// FIXME
-// export type ParamValue = Address | Buffer | boolean | bigint | Cell | number | string | undefined | null | Array<any>;
 export type ParamValue = any | any[];
 export type ParamWithValue = ParamInfo & { value: ParamValue };
 export type ParamsWithValue = Record<string, ParamWithValue>;
@@ -60,9 +57,6 @@ export interface FieldProps {
   isArray?: boolean;
   hideOptional?: boolean;
 }
-
-// TODO: rename to AnyField
-export type AllFields = typeof AmountField | typeof ArrayField | typeof MultiTypeField | typeof NestedField;
 
 export type Field = { Field: (props: any) => JSX.Element; props: any };
 export type Fields = Field[];
@@ -183,7 +177,6 @@ export const ActionCard: React.FC<ActionCardProps> = ({
                 const _aliasParams: Parameters = {};
                 _aliasParams[paramName] = { type: t };
                 fieldToAdd = _processParams(_aliasParams)[0];
-                console.log(fieldToAdd);
               } else {
                 fieldToAdd = {
                   Field: NestedField,
@@ -199,7 +192,6 @@ export const ActionCard: React.FC<ActionCardProps> = ({
       }
       return fields;
     }
-    console.log(_processParams(methodParams));
     setParamFields(_processParams(methodParams));
     if (deploy?.configType) {
       setConfigFields(_processParams(deploy.configType));
