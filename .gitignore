@@ -2,7 +2,7 @@ node_modules/
 dist/
 # lib/ # DEVMODE
 yarn-error.log
-yarn.lock
+vim.session
 
 # yarn
 .yarn/*
@@ -11,4 +11,4 @@ yarn.lock
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-
+install-state.gz
