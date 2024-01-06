@@ -5,7 +5,7 @@ import inject from "@rollup/plugin-inject";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/blueproject/",
+  base: process.env.GH_PAGES ? "/blueproject/" : "./",
   optimizeDeps: {
     esbuildOptions: {
       define: {

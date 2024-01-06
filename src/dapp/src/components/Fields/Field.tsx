@@ -33,7 +33,7 @@ export function BaseField(props: BaseFieldProps) {
         Address,
         Buffer,
         toNano,
-        Dictionary,
+        Dictionary
       );
 
       if (!props.isArray) {

@@ -12,7 +12,7 @@ export function UnknownField(props: FieldProps) {
         beginCell,
         Address,
         Buffer,
-        toNano,
+        toNano
       );
       console.warn("received some default value, but no type check, may cause error", defaultValue);
     } catch (e) {

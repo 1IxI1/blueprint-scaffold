@@ -1,4 +1,4 @@
-import { WrappersConfig, WrappersData } from "./wrappersConfigTypes";
+import { WrappersData, WrappersConfig } from "./wrappersConfigTypes";
 
 export const loadWrappersFromJSON = async (): Promise<[WrappersData, WrappersConfig]> => {
   const wrappers = await import("../config/wrappers.json");

@@ -43,7 +43,7 @@ export type TypeConfig = {
 };
 
 export type GetMethodConfig = MethodConfig & {
-  outNames: string[];
+  outNames: string[] | {};
 };
 
 export type WrapperConfig = {

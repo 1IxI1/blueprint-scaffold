@@ -233,7 +233,7 @@ function BodyRoot(props: BodyRootProps) {
           wrapper,
           params,
           deployData["configType"],
-          deployData["codeHex"],
+          deployData["codeHex"]
         );
       } else throw new Error("Deploy data is missing");
     }

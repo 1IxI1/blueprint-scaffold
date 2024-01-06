@@ -61,15 +61,10 @@ export interface FieldProps {
   hideOptional?: boolean;
 }
 
-type AllProps = FieldProps | ArrayFieldProps | NestedFieldProps | MultiTypeFieldProps;
 // TODO: rename to AnyField
 export type AllFields = typeof AmountField | typeof ArrayField | typeof MultiTypeField | typeof NestedField;
-type FieldType = { Field: typeof AmountField; props: FieldProps };
-type ArrayFieldType = { Field: typeof ArrayField; props: ArrayFieldProps };
-type NestedFieldType = { Field: typeof NestedField; props: NestedFieldProps };
-type MultiTypeFieldType = { Field: typeof MultiTypeField; props: MultiTypeFieldProps };
-// export type Field = FieldType | ArrayFieldProps | NestedFieldType | MultiTypeFieldType;
-export type Field = { Field: AllFields; props: AllProps };
+
+export type Field = { Field: (props: any) => JSX.Element; props: any };
 export type Fields = Field[];
 
 export const choseField = (type: String) => {
@@ -134,7 +129,9 @@ export const ActionCard: React.FC<ActionCardProps> = ({
   const wallet = useTonWallet();
   const toast = useToast();
 
-  const [outNames, setOutNames] = useState<string[]>("outNames" in methodConfig ? methodConfig.outNames : []);
+  const [outNames, setOutNames] = useState<string[]>(
+    "outNames" in methodConfig ? (methodConfig.outNames as string[]) : []
+  );
 
   useEffect(() => {
     function _processParams(params: Parameters): Field[] {
@@ -319,8 +316,8 @@ export const ActionCard: React.FC<ActionCardProps> = ({
           {isDeploy && !!deploy?.configType && (
             <>
               <ul>
-                {configFields.map(({ Field: _Field, props: _props }) => {
-                  return <_Field key={_props.paramName} {..._props} />;
+                {configFields.map((configField) => {
+                  return <configField.Field key={configField.props.paramName} {...configField.props} />;
                 })}
               </ul>{" "}
               <Center>

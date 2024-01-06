@@ -104,7 +104,7 @@ export async function parseWrapper(filePath: string, className: string): Promise
           (i) =>
             i.type == "TSExpressionWithTypeArguments" &&
             i.expression.type == "Identifier" &&
-            i.expression.name == "Contract",
+            i.expression.name == "Contract"
         ) !== -1
       ) {
         path.traverse({

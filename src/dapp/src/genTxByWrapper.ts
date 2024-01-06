@@ -65,7 +65,7 @@ export class Executor {
     wrapperPath: string,
     className: string,
     methodName: string,
-    params: ParamsWithValue,
+    params: ParamsWithValue
   ) {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");
@@ -80,7 +80,7 @@ export class Executor {
     wrapperPath: string,
     className: string,
     methodName: string,
-    params: ParamsWithValue,
+    params: ParamsWithValue
   ) {
     wrapperPath = wrapperPath.replace(".ts", "");
     const Wrapper = (await import(`${wrapperPath}.ts`))[className];
@@ -95,7 +95,7 @@ export class Executor {
     className: string,
     params: ParamsWithValue,
     configType: Parameters,
-    codeHex: string,
+    codeHex: string
   ): Promise<Address> {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");

@@ -18,6 +18,11 @@ export function CellField(props: FieldProps) {
     }
   }
   return (
-    <BaseField {...props} type={"Cell"} parseInputValue={parseInputValue} placeHolder="HEX or base64 serialized cell" />
+    <BaseField
+      {...props}
+      types={["Cell"]}
+      parseInputValue={parseInputValue}
+      placeHolder="HEX or base64 serialized cell"
+    />
   );
 }

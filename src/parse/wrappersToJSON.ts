@@ -67,8 +67,8 @@ async function writeUpdateConfig(configPath: string, newConfig: WrappersConfig) 
         }
         return value;
       },
-      2,
-    ),
+      2
+    )
   );
 }
 
