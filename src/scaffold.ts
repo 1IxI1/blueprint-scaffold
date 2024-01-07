@@ -67,12 +67,13 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
     ui.write("✅ Set title.\n");
   }
   ui.setActionPrompt("📝 Updating dapp configs...");
+  await fs.mkdir(path.join(DAPP_DIR, "src/config"), { recursive: true });
   const wrappersFiles = await parseWrappersToJSON(ui, WRAPPERS_JSON, CONFIG_JSON);
   ui.clearActionPrompt();
   ui.write("✅ Updated dapp configs.\n");
 
   ui.setActionPrompt("📁 Copying wrappers into dapp...");
-  await fs.mkdir(path.join(DAPP_DIR, "src", "wrappers"), { recursive: true });
+  await fs.mkdir(path.join(DAPP_DIR, "src/wrappers"), { recursive: true });
 
   const filesToCopy = await findImportsOfList(wrappersFiles, process.cwd());
   for (const filePath of filesToCopy) {

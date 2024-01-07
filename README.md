@@ -140,21 +140,25 @@ async sendMint(
 }
 ```
 
-##### Available argument types
+### Argument types
 
--   `Address` in Address
--   `bigint`, `number` in Amount
--   `boolean` in Bool
--   `Buffer` in Buffer
--   `Cell` in Cell
--   `null` in Null
--   `string` in String
--   MultiType for splitted types, gives a list to choose.
--   Unknown for others, just a placeholder. If the parameter is optional,
-    will pass `undefined` to a function, otherwise the function won't run.
+Scaffold parser automaticaly recognizes basic types and objects,
+that are defined in the same file.
 
-You can implement other types for your specific proposes in
-`components/Fields/`, take any type as a reference.
+If you need some very specific field or you want to make custom input way of some,
+you can implement your input fields in `components/Fields/`, using one of the types as a reference.
+
+Very basic types (`components/Fields/`) are `Cell`, `Address` and `Buffer` - they just
+define a function to handle and process the input string and send
+parsed data for the method run. Then they render a `BaseField` - markup for basic fields.
+
+Special types (`components/Fields/special/`) like `Bool`, `Array`, `Null` fields
+are those which are using additional buttons, implement some nested logic etc.
+They render themselves, without any markups.
+
+Most likely, you will implement some complex type, so I suggest you
+using files from `components/Fields/special/` as references for your fields.
+
 
 ### getFunctions
 
@@ -424,7 +428,7 @@ https://my-dapp.xyz/<WrapperName>/<methodName>/<EQAddr>
 > Paths variant won't work with github pages
 > ([reason](https://create-react-app.dev/docs/deployment/#notes-on-client-side-routing)),
 > but may be used in production, or during development, on localhost:
-> http://localhost:3000/blueproject/JettonWallet/getJettonData/EQCVervJ0JDFlSdOsPos17zHdRBU-kHHl09iXOmRIW-5lwXW
+> http://localhost:5173/JettonWallet/getJettonData/EQCVervJ0JDFlSdOsPos17zHdRBU-kHHl09iXOmRIW-5lwXW
 
 **Example (doesn't work):** \
 https://1ixi1.github.io/blueproject/JettonWallet/getJettonData/EQCVervJ0JDFlSdOsPos17zHdRBU-kHHl09iXOmRIW-5lwXW
