@@ -1,10 +1,10 @@
-# 🫐 Blueprint Scaffold
+# 🫐 Blueprint Scaffold: Enhance Your DApps
 
-The first plugin for the [Blueprint Framework](https://github.com/ton-org/blueprint/) - a developer enviroment for [TON blockchain](https://ton.org/).
+Welcome to the first plugin for the [Blueprint Framework](https://github.com/ton-org/blueprint/), built for [TON blockchain](https://ton.org/).
 
-Turns a blueprint project into a full-fledged DApp.
+This plugin efficiently turns Blueprint projects into fully-functional DApps.
 
-A normal blueprint project contains wrappers for each [FunC contract](https://learnxinyminutes.com/docs/func/). Scaffold parses these wrappers and turns them into a React application for using contract methods through the UI.
+It simplifies the process by converting [FunC contract](https://learnxinyminutes.com/docs/func/) wrappers into a React application, making contract methods easily accessible through a user-friendly UI.
 
 <img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/1da658bf-872c-4f1f-85d1-3cc6a5dc5fd1"/>
 
