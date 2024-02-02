@@ -273,7 +273,7 @@ yarn blueprint scaffold
 To try the app, run this:
 
 ```bash
-cd dapp && yarn && yarn start
+cd dapp && yarn && yarn dev
 ```
 
 Or, if you have changed your wrappers only a bit, you can just renew the
