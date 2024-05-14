@@ -4,7 +4,7 @@ The first plugin for the [Blueprint Framework](https://github.com/ton-org/bluepr
 
 Turns a blueprint project into a full-fledged DApp.
 
-A normal blueprint project contains wrappers for each [FunC contract](https://learnxinyminutes.com/docs/func/). Scaffold parses these wrappers and turns them into a React application for using contract methods through the UI.
+A normal blueprint project contains wrappers for each [FunC contract](https://docs.ton.org/develop/func/overview). Scaffold parses these wrappers and turns them into a React application for using contract methods through the UI.
 
 <img width="80%" src="https://github.com/1IxI1/blueprint-scaffold/assets/53380262/1da658bf-872c-4f1f-85d1-3cc6a5dc5fd1"/>
 
