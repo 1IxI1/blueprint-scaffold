@@ -37,6 +37,78 @@ class TonConnectSender implements Sender {
   }
 }
 
+export const basicParamTypes = [
+  "Address",
+  "boolean",
+  "Buffer",
+  "bigint",
+  "number",
+  "string",
+  "Cell",
+  "Builder",
+  "Slice",
+  "null",
+];
+
+function paramsToArgs(params: ParamsWithValue): any[] {
+  // there may be nested objects
+  // {
+  //   "options": {
+  //     "type": "HeavySpamOptions",
+  //     "optional": false,
+  //     "value": {
+  //       "msgsLimitPerBlock": {
+  //         "type": "number",
+  //         "optional": true,
+  //         "value": "1"
+  //       },
+  //       ...
+  //     }
+  //   },
+  //   "value": {
+  //     "type": "bigint",
+  //     "optional": false,
+  //     "value": "0"
+  //   }
+  // }
+  // should return
+  // {
+  //   "options": {
+  //     "msgsLimitPerBlock": 1,
+  //     "initialMsgSize": 1,
+  //     "msgSizeLimit": 1,
+  //     "msgGrowthPerBlock": 1,
+  //     "untilUtime": 1
+  //     },
+  //     "value": 0
+  // }
+  function checkIsTypeBasic(typestr: string): boolean {
+    for (const basicType of basicParamTypes) {
+      if (
+        basicType === typestr ||
+        "Array<".concat(basicType).concat(">") === typestr ||
+        basicType.concat("[]") === typestr
+      )
+        return true;
+    }
+    return false;
+  }
+  const args: any[] = [];
+  for (const param in params) {
+    if (checkIsTypeBasic(params[param].type)) {
+      args.push(params[param].value);
+    } else {
+      // create object and push into args
+      const obj: any = {};
+      for (const subParam in params[param].value) {
+        obj[subParam] = params[param].value[subParam].value;
+      }
+      args.push(obj);
+    }
+  }
+  return args;
+}
+
 export class Executor {
   #client: TonClient4;
   #via?: Sender;
@@ -65,7 +137,7 @@ export class Executor {
     wrapperPath: string,
     className: string,
     methodName: string,
-    params: ParamsWithValue
+    params: ParamsWithValue,
   ) {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");
@@ -76,7 +148,7 @@ export class Executor {
       )
     )[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
-    const args = Object.values(params).map((param) => param.value);
+    const args = paramsToArgs(params);
     return await contractProvider[methodName](this.#via, ...args);
   }
 
@@ -85,7 +157,7 @@ export class Executor {
     wrapperPath: string,
     className: string,
     methodName: string,
-    params: ParamsWithValue
+    params: ParamsWithValue,
   ) {
     wrapperPath = wrapperPath.replace(".ts", "");
     const Wrapper = (
@@ -95,8 +167,7 @@ export class Executor {
       )
     )[className];
     const contractProvider = this.#client.open(Wrapper.createFromAddress(contractAddr));
-    const args = Object.values(params).map((param) => param.value);
-
+    const args = paramsToArgs(params);
     return await contractProvider[methodName](...args);
   }
 
@@ -105,7 +176,7 @@ export class Executor {
     className: string,
     params: ParamsWithValue,
     configType: Parameters,
-    codeHex: string
+    codeHex: string,
   ): Promise<Address> {
     if (!this.#via) throw new Error("No sender connected!");
     wrapperPath = wrapperPath.replace(".ts", "");
@@ -118,13 +189,14 @@ export class Executor {
 
     const contractConfig: { [key: string]: any } = {};
     for (const configField in configType) {
+      // TODO: here also maybe some nested type. maybe need using paramsToArgs
       contractConfig[configField] = params[configField].value;
       delete params[configField];
     }
     const codeCell = Cell.fromBoc(Buffer.from(codeHex, "hex"))[0];
     const w = Wrapper.createFromConfig(contractConfig, codeCell);
     const contractProvider = this.#client.open(w);
-    const args = Object.values(params).map((param) => param.value);
+    const args = paramsToArgs(params);
     await contractProvider.sendDeploy(this.#via, ...args);
     return contractProvider.address;
   }
