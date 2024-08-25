@@ -131,7 +131,7 @@ function BodyRoot(props: BodyRootProps) {
   useEffect(() => {
     async function loadWrappers() {
       const { parsedWrappers, parsedConfig } = await preloadWrappers();
-      var _wrappers = parsedWrappers;
+      const _wrappers = { ...parsedWrappers };
 
       // remove wrappers with no send/get methods
       for (const _wrapper in parsedWrappers) {
@@ -168,7 +168,7 @@ function BodyRoot(props: BodyRootProps) {
       setMethod(methodName);
     }
 
-    loadWrappers();
+    loadWrappers().catch((e) => console.error('Error when trying to call loadWrappers()', e));
     onOpen();
     handleScroll();
   }, [props.areGetMethods]);
