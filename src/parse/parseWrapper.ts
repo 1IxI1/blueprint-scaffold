@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import * as babelParser from "@babel/parser";
 import traverse, { NodePath } from "@babel/traverse";
 import generate from "@babel/generator";
+import path from "path";
 
 import { TSInterfaceDeclaration, TSTypeAliasDeclaration } from "@babel/types";
 import { Parameters, Functions, WrapperInfo, DefinedTypes } from "../dapp/src/utils/wrappersConfigTypes";
@@ -190,7 +191,7 @@ export async function parseWrapper(filePath: string, className: string): Promise
       if ("sendDeploy" in sendFunctions) delete sendFunctions["sendDeploy"];
     }
   }
-  const relativePath = filePath.replace(process.cwd(), ".");
+  const relativePath = `./${path.relative(process.cwd(), filePath).replace(/\\/g, "/")}`;
   return {
     sendFunctions,
     getFunctions,
