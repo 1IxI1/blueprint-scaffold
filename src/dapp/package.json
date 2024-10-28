@@ -17,6 +17,7 @@
     "@chakra-ui/system": "2.6.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@orbs-network/ton-access": "^2.3.3",
     "@ton/core": "^0.53.0",
     "@ton/crypto": "^3.2.0",
     "@ton/ton": "^13.9.0",

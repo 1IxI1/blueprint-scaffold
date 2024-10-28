@@ -1993,6 +1993,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@orbs-network/ton-access@npm:^2.3.3":
+  version: 2.3.3
+  resolution: "@orbs-network/ton-access@npm:2.3.3"
+  dependencies:
+    isomorphic-fetch: "npm:^3.0.0"
+  checksum: d92b58d0ffbd27f5fc8ec5d490eaa35b3857296568f05af968ec78a5215b38fea6ba694d24a437b516844e3112295075bb600b1ecf9901a03cf8c39c97c768aa
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -2845,6 +2854,7 @@ __metadata:
     "@emotion/react": "npm:^11.11.3"
     "@emotion/styled": "npm:^11.11.0"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
+    "@orbs-network/ton-access": "npm:^2.3.3"
     "@rollup/plugin-inject": "npm:^5.0.5"
     "@ton/core": "npm:^0.53.0"
     "@ton/crypto": "npm:^3.2.0"
@@ -3798,6 +3808,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isomorphic-fetch@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "isomorphic-fetch@npm:3.0.0"
+  dependencies:
+    node-fetch: "npm:^2.6.1"
+    whatwg-fetch: "npm:^3.4.1"
+  checksum: 511b1135c6d18125a07de661091f5e7403b7640060355d2d704ce081e019bc1862da849482d079ce5e2559b8976d3de7709566063aec1b908369c0b98a2b075b
+  languageName: node
+  linkType: hard
+
 "jackspeak@npm:^2.3.5":
   version: 2.3.6
   resolution: "jackspeak@npm:2.3.6"
@@ -4167,7 +4187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.9":
+"node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.9":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -5227,6 +5247,13 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: 5612d5f3e54760a797052eb4927f0ddc01383550f542ccd33d5238cfd65aeed392a45ad38364970d0a0f4fea32e1f4d231b3d8dac4a3bdd385e5cf802ae097db
+  languageName: node
+  linkType: hard
+
+"whatwg-fetch@npm:^3.4.1":
+  version: 3.6.20
+  resolution: "whatwg-fetch@npm:3.6.20"
+  checksum: fa972dd14091321d38f36a4d062298df58c2248393ef9e8b154493c347c62e2756e25be29c16277396046d6eaa4b11bd174f34e6403fff6aaca9fb30fa1ff46d
   languageName: node
   linkType: hard
 

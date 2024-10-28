@@ -46,8 +46,8 @@ export const scaffold: Runner = async (args: Args, ui: UIProvider) => {
     await fs.cp(path.join(__dirname, "dapp"), DAPP_DIR, { recursive: true, force: true });
     // wrappersConfigTypes.ts is imported in blueprint, to parse wrappers,
     // we remove the compiled files from the destination.
-    await fs.rm(path.join(DAPP_DIR, "src", "utils", "wrappersConfigTypes.d.ts"));
-    await fs.rm(path.join(DAPP_DIR, "src", "utils", "wrappersConfigTypes.js"));
+    // await fs.rm(path.join(DAPP_DIR, "src", "utils", "wrappersConfigTypes.d.ts"));
+    // await fs.rm(path.join(DAPP_DIR, "src", "utils", "wrappersConfigTypes.js"));
     ui.clearActionPrompt();
     ui.write("✅ Created dapp directory.\n");
 
