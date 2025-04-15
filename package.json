@@ -1,6 +1,6 @@
 {
   "name": "blueprint-scaffold",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Bluerpint Scaffold Plugin. Helps you to build a dapp from wrappers which you've wrote for your FunC contracts.",
   "main": "dist/index.js",
   "author": "1IxI1",
@@ -15,21 +15,21 @@
     "format": "prettier --write src"
   },
   "devDependencies": {
-    "@ton/blueprint": "0.15.0",
-    "@ton/core": "0.49.2",
-    "@ton/crypto": "3.2.0",
-    "@ton/ton": "13.9.0",
+    "@ton/blueprint": "^0.15.0",
+    "@ton/core": "^0.49.2",
+    "@ton/crypto": "^3.2.0",
+    "@ton/ton": "^13.9.0",
     "@types/babel__generator": "7.6.8",
     "@types/babel__traverse": "7.20.4",
-    "@types/node": "20.8.10",
-    "prettier": "2.8.8",
-    "typescript": "4.9.5"
+    "@types/node": "^20.8.10",
+    "prettier": "^2.8.8",
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
-    "@ton/blueprint": "0.15.0",
-    "@ton/core": "0.49.2",
-    "@ton/crypto": "3.2.0",
-    "@ton/ton": "13.9.0"
+    "@ton/blueprint": "^0.15.0",
+    "@ton/core": "^0.49.2",
+    "@ton/crypto": "^3.2.0",
+    "@ton/ton": "^13.9.0"
   },
   "dependencies": {
     "@babel/core": "7.23.6",
@@ -38,7 +38,7 @@
     "@babel/preset-typescript": "7.23.3",
     "@babel/traverse": "7.23.6",
     "@babel/types": "7.23.6",
-    "arg": "5.0.2"
+    "arg": "^5.0.2"
   },
   "files": [
     "dist/**/*"
