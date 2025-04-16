@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import path from "path";
 import * as babelParser from "@babel/parser";
 import traverse, { NodePath } from "@babel/traverse";
 import generate from "@babel/generator";
@@ -9,7 +10,17 @@ import { Parameters, Functions, WrapperInfo, DefinedTypes } from "../dapp/src/ut
 import { readCompiled } from "../utils";
 
 export async function parseWrapper(filePath: string, className: string): Promise<WrapperInfo> {
-  const content = await fs.readFile(filePath, "utf-8");
+  let content = await fs.readFile(filePath, "utf-8");
+
+  if (content.includes("export * from")) {
+    // TODO: fix Object is possibly 'null'
+    const relativePath = content.match(/export \* from '(.+)';/)[1];
+    const basePath = path.dirname(filePath);
+    const importedFilePath = path.resolve(basePath, relativePath);
+
+    content = await fs.readFile(importedFilePath, "utf-8");
+  }
+
   const ast = babelParser.parse(content, {
     sourceType: "module",
     plugins: ["typescript"],
